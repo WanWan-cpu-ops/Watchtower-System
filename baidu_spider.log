@@ -1,0 +1,64 @@
+2025-12-04 19:55:25,341 - INFO - server listening on 127.0.0.1:8000
+2025-12-04 19:55:25,341 - INFO - server listening on [::1]:8000
+2025-12-04 19:56:30,984 - INFO - connection open
+2025-12-04 19:57:01,142 - INFO - connection open
+2025-12-04 19:57:08,320 - INFO - 原始关键词: 宜宾, 编码后: %E5%AE%9C%E5%AE%BE
+2025-12-04 19:57:08,321 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 19:57:09,520 - INFO - 请求成功，状态码: 200
+2025-12-04 19:57:09,520 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 19:57:09,523 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_宜宾_1.json'
+2025-12-04 19:57:09,588 - INFO - 找到 5 个搜索结果项
+2025-12-04 19:57:09,590 - INFO - 提取概要: 宜宾市人民政府网站不仅宣传政务，还包含多项服务，并持续发布干部任前公示信息。1...
+2025-12-04 19:57:09,592 - INFO - 提取概要: 【宜宾天气预报15天_宜宾天气预报15天查询】-中国天气网...
+2025-12-04 19:57:09,593 - INFO - 提取概要: 走进万里长江第一城,四川宜宾市,这里也是长江的起点,旅游,旅游......
+2025-12-04 19:57:09,599 - INFO - 提取概要: 四川省宜宾市简介2025年6月6日四川省宜宾市简介️地理位置位于四川省东南部，地处川、滇、黔三省结合...
+2025-12-04 19:57:09,600 - INFO - 提取概要: 走进宜宾-宜宾市人民政府网站...
+2025-12-04 19:57:09,600 - INFO - 成功提取并去重 5 条搜索结果
+2025-12-04 19:57:09,601 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_宜宾.json'
+2025-12-04 19:58:04,392 - INFO - 原始关键词: 宜宾, 编码后: %E5%AE%9C%E5%AE%BE
+2025-12-04 19:58:04,393 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 19:58:05,857 - INFO - 请求成功，状态码: 200
+2025-12-04 19:58:05,858 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 19:58:05,866 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_宜宾_1.json'
+2025-12-04 19:58:05,945 - INFO - 找到 3 个搜索结果项
+2025-12-04 19:58:05,949 - INFO - 提取概要: 宜宾市人民政府网站宜宾市人民政府网站是宜宾市人民政府对外宣传的窗口,是推进电子政务的重要一环,是宜宾...
+2025-12-04 19:58:05,950 - INFO - 提取概要: 【宜宾天气预报15天_宜宾天气预报15天查询】-中国天气网...
+2025-12-04 19:58:05,952 - INFO - 提取概要: 天气-宜宾市人民政府网站...
+2025-12-04 19:58:05,952 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 19:58:05,952 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_宜宾.json'
+2025-12-04 19:59:05,788 - INFO - connection open
+2025-12-04 19:59:41,583 - INFO - connection open
+2025-12-04 20:00:17,205 - INFO - connection open
+2025-12-04 20:00:52,440 - INFO - connection open
+2025-12-04 20:01:06,279 - INFO - connection open
+2025-12-04 20:04:46,117 - INFO - connection open
+2025-12-04 20:05:36,494 - INFO - connection open
+2025-12-04 20:06:35,153 - INFO - connection open
+2025-12-04 20:06:44,236 - INFO - connection open
+2025-12-04 20:06:45,017 - INFO - connection open
+2025-12-04 20:06:47,529 - INFO - connection open
+2025-12-04 20:08:37,759 - INFO - connection open
+2025-12-04 20:09:34,489 - INFO - connection open
+2025-12-04 20:09:37,113 - INFO - connection open
+2025-12-04 20:09:47,733 - INFO - connection open
+2025-12-04 20:10:07,741 - INFO - connection open
+2025-12-04 20:11:08,664 - INFO - connection open
+2025-12-04 20:11:51,579 - INFO - connection open
+2025-12-04 20:11:56,502 - INFO - connection open
+2025-12-04 20:12:40,408 - INFO - connection open
+2025-12-04 20:12:49,890 - INFO - connection open
+2025-12-04 20:12:51,504 - INFO - connection open
+2025-12-04 20:14:47,088 - INFO - connection open
+2025-12-04 20:15:08,829 - INFO - connection open
+2025-12-04 20:15:17,401 - INFO - 原始关键词: 宜宾, 编码后: %E5%AE%9C%E5%AE%BE
+2025-12-04 20:15:17,401 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 20:15:19,302 - INFO - 请求成功，状态码: 200
+2025-12-04 20:15:19,302 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 20:15:19,305 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_宜宾_1.json'
+2025-12-04 20:15:19,362 - INFO - 找到 3 个搜索结果项
+2025-12-04 20:15:19,367 - INFO - 提取概要: 宜宾市人民政府网站宜宾市人民政府网站是宜宾市人民政府对外宣传的窗口,是推进电子政务的重要一环,是宜宾...
+2025-12-04 20:15:19,369 - INFO - 提取概要: 【宜宾天气预报15天_宜宾天气预报15天查询】-中国天气网...
+2025-12-04 20:15:19,372 - INFO - 提取概要: 走进万里长江第一城,四川宜宾市,这里也是长江的起点,旅游,旅游......
+2025-12-04 20:15:19,373 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 20:15:19,373 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_宜宾.json'
+2025-12-04 20:15:34,058 - INFO - connection open

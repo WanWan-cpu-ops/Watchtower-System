@@ -1,6 +1,15 @@
-websockets==15.0.1
-requests==2.32.5
-beautifulsoup4==4.14.3
-flask==3.1.2
-bcrypt==5.0.0
-lxml==5.2.1
+# 智能瞭望系统 依赖项列表
+
+# WebSocket服务器
+websockets==10.3
+
+# 网页爬取
+requests==2.28.1
+beautifulsoup4==4.11.1
+lxml==4.9.1
+
+# 数据库
+peewee==3.15.3
+
+# 其他
+python-dotenv==1.0.0

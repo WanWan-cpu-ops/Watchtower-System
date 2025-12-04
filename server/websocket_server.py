@@ -1,452 +1,405 @@
 import asyncio
 import websockets
-import sqlite3
-import bcrypt
-import os
-import sys
-import importlib.util
-import threading
+import json
+import time
 from datetime import datetime
-
-# 添加项目根目录到Python路径
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from C2SPackageHelper import C2SPackageHelper
-
-# 搜索源目录
-SEARCH_SOURCES_DIR = "../search_sources"
-
-# 客户端连接存储
-clients = set()
-# 缓存搜索结果
-search_results_cache = {}
+from .database import Database
+from .C2SPackageHelper import C2SPackageHelper
+from .search_source_manager import SearchSourceManager
 
 class WebSocketServer:
-    """WebSocket服务器主类"""
-    
-    def __init__(self, host="localhost", port=8765):
+    def __init__(self, host='localhost', port=8000):
         self.host = host
         self.port = port
-        self.db_conn = None
-        self.db_cursor = None
+        self.clients = set()
         
-        # 初始化数据库连接
-        self.init_db()
+        # 初始化数据库和搜索源管理器
+        self.db = Database()
+        self.search_source_manager = SearchSourceManager(self.db.get_blacklist())
         
-        # 初始化搜索源
-        self.refresh_search_sources()
-    
-    def init_db(self):
-        """初始化数据库连接"""
-        self.db_conn = sqlite3.connect('telescope.db', check_same_thread=False)
-        self.db_cursor = self.db_conn.cursor()
-    
-    def refresh_search_sources(self):
-        """刷新搜索源列表，将搜索源目录中的所有Python文件注册到数据库"""
-        if not os.path.exists(SEARCH_SOURCES_DIR):
-            return
-            
-        # 获取所有Python文件
-        python_files = [f for f in os.listdir(SEARCH_SOURCES_DIR) if f.endswith('.py')]
+        # 保存最后一次搜索的结果
+        self.last_search_results = []
         
-        for filename in python_files:
-            # 提取搜索源名称（不带.py扩展名）
-            name = filename[:-3]
-            
-            # 检查是否已存在
-            self.db_cursor.execute("SELECT id FROM search_sources WHERE filename = ?", (filename,))
-            if not self.db_cursor.fetchone():
-                # 插入新的搜索源
-                self.db_cursor.execute(
-                    "INSERT INTO search_sources (name, filename) VALUES (?, ?)",
-                    (name, filename)
-                )
-        
-        self.db_conn.commit()
+    def log(self, message, level='INFO'):
+        """
+        日志记录函数
+        """
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(f"[{timestamp}] [{level}] {message}")
     
     async def handle_client(self, websocket):
-        """处理客户端连接"""
-        clients.add(websocket)
+        """
+        处理客户端连接
+        """
+        self.clients.add(websocket)
+        self.log(f"新客户端连接: {websocket.remote_address}", 'INFO')
         
         try:
             async for message in websocket:
-                print(f"[{datetime.now()}] 收到客户端消息: {message}")
-                # 解析客户端消息
-                package = C2SPackageHelper.parse_package(message)
-                msg_type = package.get("msg_type")
-                data = package.get("data", {})
-                
-                # 根据消息类型处理
-                if msg_type == C2SPackageHelper.MSG_TYPE_LOGIN:
-                    await self.handle_login(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_REGISTER:
-                    await self.handle_register(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_SEARCH:
-                    await self.handle_search(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_FILTER:
-                    await self.handle_filter(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_REFRESH_DATA:
-                    await self.handle_refresh_data(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_DELETE_DATA:
-                    await self.handle_delete_data(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_REFRESH_SOURCES:
-                    await self.handle_refresh_sources(websocket)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_TOGGLE_SOURCE:
-                    await self.handle_toggle_source(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_SEND_VERIFICATION_CODE:
-                    await self.handle_send_verification_code(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_SUBMIT_VERIFICATION:
-                    await self.handle_submit_verification(websocket, data)
-                elif msg_type == C2SPackageHelper.MSG_TYPE_REFRESH_PROFILE:
-                    await self.handle_refresh_profile(websocket, data)
+                await self.process_message(websocket, message)
+        
+        except websockets.exceptions.ConnectionClosedError as e:
+            self.log(f"客户端连接关闭: {websocket.remote_address} - 错误: {e}", 'WARNING')
+        
+        except Exception as e:
+            self.log(f"客户端连接异常: {websocket.remote_address} - 错误: {e}", 'ERROR')
         
         finally:
-            clients.remove(websocket)
+            self.clients.remove(websocket)
+            self.log(f"客户端已断开: {websocket.remote_address}", 'INFO')
     
-    async def handle_login(self, websocket, data):
-        """处理用户登录"""
-        username = data.get("username")
-        password = data.get("password")
-        
-        # 验证用户名和密码
-        self.db_cursor.execute("SELECT id, password, permission_level FROM users WHERE username = ?", (username,))
-        user = self.db_cursor.fetchone()
-        
-        if user and bcrypt.checkpw(password.encode('utf-8'), user[1].encode('utf-8')):
-            # 登录成功
-            user_info = {
-                "username": username,
-                "permission_level": user[2]
-            }
-            response = C2SPackageHelper.create_login_response(C2SPackageHelper.STATUS_SUCCESS, user_info)
-        else:
-            # 登录失败
-            response = C2SPackageHelper.create_login_response(C2SPackageHelper.STATUS_FAILED)
-        
-        print(f"[{datetime.now()}] 发送登录响应: {response}")
-        await websocket.send(response)
-    
-    async def handle_register(self, websocket, data):
-        """处理用户注册"""
-        print("收到注册请求:", data)
-        
-        username = data.get("username")
-        password = data.get("password")
-        
-        # 检查用户名是否已存在
-        self.db_cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
-        if self.db_cursor.fetchone():
-            # 用户名已存在
-            print("用户名已存在:", username)
-            response = C2SPackageHelper.create_register_response(
-                C2SPackageHelper.STATUS_FAILED,
-                {"message": "用户名已存在"}
-            )
-        else:
-            # 创建新用户
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-            self.db_cursor.execute(
-                "INSERT INTO users (username, password, permission_level) VALUES (?, ?, ?)",
-                (username, hashed_password, 0)  # 默认权限级别为0
-            )
-            self.db_conn.commit()
-            print("注册成功:", username)
+    async def process_message(self, websocket, message):
+        """
+        处理客户端发送的消息
+        """
+        try:
+            self.log(f"接收到客户端消息: {message} from {websocket.remote_address}", 'DEBUG')
+            data = json.loads(message)
+            message_type = data.get('type')
+            message_data = data.get('data', {})
             
-            # 注册成功
-            response = C2SPackageHelper.create_register_response(
-                C2SPackageHelper.STATUS_SUCCESS
-            )
+            self.log(f"处理消息: 类型={message_type}, 数据={message_data} from {websocket.remote_address}", 'INFO')
+            
+            # 根据消息类型处理
+            if message_type == 'login':
+                await self.handle_login(websocket, message_data)
+            
+            elif message_type == 'search_data':
+                await self.handle_search_data(websocket, message_data)
+            
+            elif message_type == 'filter_data':
+                await self.handle_filter_data(websocket, message_data)
+            
+            elif message_type == 'refresh_data_management':
+                await self.handle_refresh_data_management(websocket)
+            
+            elif message_type == 'delete_data':
+                await self.handle_delete_data(websocket, message_data)
+            
+            elif message_type == 'refresh_search_source_management':
+                await self.handle_refresh_search_source_management(websocket)
+            
+            elif message_type == 'disable_search_source':
+                await self.handle_disable_search_source(websocket, message_data)
+            
+            elif message_type == 'enable_search_source':
+                await self.handle_enable_search_source(websocket, message_data)
+            
+            else:
+                self.log(f"未知消息类型: {message_type} from {websocket.remote_address}", 'WARNING')
+                await websocket.send(C2SPackageHelper.error("未知消息类型"))
         
-        print(f"[{datetime.now()}] 发送注册响应: {response}")
-        await websocket.send(response)
+        except json.JSONDecodeError as e:
+            self.log(f"无效的JSON消息: {message} from {websocket.remote_address} - 错误: {e}", 'ERROR')
+            await websocket.send(C2SPackageHelper.error("无效的JSON消息"))
+        
+        except Exception as e:
+            self.log(f"处理消息时发生错误: {str(e)} from {websocket.remote_address}", 'ERROR')
+            await websocket.send(C2SPackageHelper.error(f"服务器错误: {str(e)}"))
     
-    async def handle_search(self, websocket, data):
-        """处理数据搜索请求"""
-        search_content = data.get("search_content")
-        page_count = data.get("page_count", 1)
+    # 处理登录
+    async def handle_login(self, websocket, data):
+        username = data.get('username')
+        password = data.get('password')
+        
+        self.log(f"开始处理登录请求: 用户名={username} from {websocket.remote_address}", 'INFO')
+        self.log(f"数据库文件路径: {self.db.db_path}", 'DEBUG')
+        
+        if not username or not password:
+            self.log(f"登录失败: 用户名或密码为空 - 用户名={username}, 密码={password}", 'WARNING')
+            await websocket.send(C2SPackageHelper.login_failure("用户名和密码不能为空"))
+            return
+        
+        # 验证用户
+        user = self.db.get_user(username)
+        self.log(f"数据库查询结果: {user}", 'DEBUG')
+        
+        if user and user[2] == password:  # user[2] 是密码字段
+            self.log(f"登录成功: 用户名={username}, 权限等级={user[3]}", 'INFO')
+            response = C2SPackageHelper.login_success(username, user[3])
+            await websocket.send(response)
+            self.log(f"发送登录成功响应: {response}", 'DEBUG')
+        else:
+            self.log(f"登录失败: 用户名或密码错误 - 用户名={username}", 'WARNING')
+            response = C2SPackageHelper.login_failure()
+            await websocket.send(response)
+            self.log(f"发送登录失败响应: {response}", 'DEBUG')
+    
+    # 处理数据搜索
+    async def handle_search_data(self, websocket, data):
+        search_content = data.get('search_content')
+        max_pages = data.get('max_pages', 1)
+        
+        self.log(f"开始处理数据搜索请求: 搜索内容={search_content}, 最大页数={max_pages} from {websocket.remote_address}", 'INFO')
+        
+        if not search_content:
+            self.log(f"搜索请求失败: 搜索内容不能为空 from {websocket.remote_address}", 'WARNING')
+            response = C2SPackageHelper.error("搜索内容不能为空")
+            await websocket.send(response)
+            self.log(f"发送搜索失败响应: {response}", 'DEBUG')
+            return
         
         # 发送正在搜索信号
-        processing_response = C2SPackageHelper.create_search_response(C2SPackageHelper.STATUS_PROCESSING)
-        print(f"[{datetime.now()}] 发送搜索处理响应: {processing_response}")
-        await websocket.send(processing_response)
+        searching_response = C2SPackageHelper.searching()
+        await websocket.send(searching_response)
+        self.log(f"发送正在搜索响应: {searching_response}", 'DEBUG')
         
-        # 获取所有可用搜索源
-        self.db_cursor.execute("SELECT id, name, filename FROM search_sources WHERE is_blacklisted = 0")
-        sources = self.db_cursor.fetchall()
+        # 获取所有启用的搜索源
+        enabled_sources = self.search_source_manager.get_enabled_sources()
+        self.log(f"获取到启用的搜索源: {[source['name'] for source in enabled_sources]}", 'DEBUG')
         
-        all_results = []
+        # 调用所有搜索源进行搜索
+        all_data = []
+        for source in enabled_sources:
+            try:
+                self.log(f"调用搜索源: {source['name']} 搜索内容: {search_content}", 'INFO')
+                # 调用搜索源的main函数
+                status, data_list = source['module'].main(search_content, max_pages)
+                if status and data_list:
+                    self.log(f"搜索源 {source['name']} 返回数据: {len(data_list)} 条", 'INFO')
+                    
+                    # 处理百度爬虫返回的新数据结构
+                    if source['name'] == 'baidu':
+                        for search_result in data_list:
+                            if 'results' in search_result:
+                                for result in search_result['results']:
+                                    result['data_source'] = source['name']
+                                all_data.extend(search_result['results'])
+                    else:
+                        for result in data_list:
+                            result['data_source'] = source['name']
+                        all_data.extend(data_list)
+                else:
+                    self.log(f"搜索源 {source['name']} 未返回有效数据", 'WARNING')
+            except Exception as e:
+                self.log(f"搜索源 {source['name']} 调用失败: {str(e)}", 'ERROR')
         
-        # 调用所有搜索源
-        for source_id, source_name, filename in sources:
-            result = self.run_search_source(filename, search_content, page_count)
-            if result["status"] == "success":
-                # 为每个结果添加来源标识
-                for item in result["data"]:
-                    item["source"] = source_name
-                all_results.extend(result["data"])
+        # 发送搜索完成信号和数据
+        self.log(f"所有搜索源完成搜索，总计数据: {len(all_data)} 条", 'INFO')
         
-        # 缓存搜索结果
-        search_id = f"search_{datetime.now().timestamp()}"
-        search_results_cache[search_id] = all_results
-        
-        # 发送搜索完成信号和结果
-        response_data = {
-            "search_id": search_id,
-            "results": all_results
-        }
-        search_response = C2SPackageHelper.create_search_response(
-            C2SPackageHelper.STATUS_COMPLETED, response_data
-        )
-        print(f"[{datetime.now()}] 发送搜索完成响应: {search_response}")
-        await websocket.send(search_response)
-    
-    def run_search_source(self, filename, search_content, page_count):
-        """运行搜索源脚本"""
-        try:
-            # 动态导入搜索源模块
-            module_path = os.path.join(SEARCH_SOURCES_DIR, filename)
-            spec = importlib.util.spec_from_file_location(filename[:-3], module_path)
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
+        # 为每个结果添加唯一ID和数据源说明，并映射字段名称
+        for i, result in enumerate(all_data):
+            # 添加唯一ID
+            result['id'] = f"{i}_{int(time.time())}"
             
-            # 调用main函数
-            if hasattr(module, "main"):
-                status, data = module.main(search_content, page_count)
-                return {
-                    "status": status,
-                    "data": data
-                }
-            else:
-                return {
-                    "status": "failed",
-                    "data": []
-                }
-        except Exception as e:
-            print(f"搜索源 {filename} 执行失败: {e}")
-            return {
-                "status": "failed",
-                "data": []
-            }
-    
-    async def handle_filter(self, websocket, data):
-        """处理数据筛选请求"""
-        search_id = data.get("search_id")
-        selected_ids = data.get("selected_ids", [])
+            # 映射字段名称：将url和cover_url映射到source_url和image_url
+            if 'url' in result:
+                result['source_url'] = result['url']
+            if 'cover_url' in result:
+                result['image_url'] = result['cover_url']
+            
+            # 添加数据源说明
+            if 'data_source' in result:
+                source = next((s for s in self.search_source_manager.get_all_sources() if s['name'] == result['data_source']), None)
+                if source:
+                    result['data_source_info'] = {
+                        'name': source['display_name'],
+                        'description': source['description'],
+                        'enabled': source['enabled']
+                    }
         
-        # 验证搜索ID和选中的ID
-        if search_id not in search_results_cache:
-            await websocket.send(C2SPackageHelper.create_filter_response(C2SPackageHelper.STATUS_FAILED))
+        # 保存最后一次搜索的结果
+        self.last_search_results = all_data
+        
+        completed_response = C2SPackageHelper.search_completed(all_data)
+        await websocket.send(completed_response)
+        self.log(f"发送搜索完成响应: {completed_response}", 'DEBUG')
+    
+    # 处理数据筛选（入库）
+    async def handle_filter_data(self, websocket, data):
+        selected_ids = data.get('selected_ids', [])
+        
+        self.log(f"开始处理数据筛选请求: 选中的ID数量={len(selected_ids)} from {websocket.remote_address}", 'INFO')
+        
+        if not selected_ids:
+            self.log(f"筛选请求失败: 没有要筛选的数据 from {websocket.remote_address}", 'WARNING')
+            response = C2SPackageHelper.error("没有要筛选的数据")
+            await websocket.send(response)
+            self.log(f"发送筛选失败响应: {response}", 'DEBUG')
+            return
+        
+        # 根据选中的ID找到对应的搜索结果数据
+        data_list = [result for result in self.last_search_results if result['id'] in selected_ids]
+        
+        self.log(f"根据选中的ID找到对应的数据: 数据数量={len(data_list)} from {websocket.remote_address}", 'INFO')
+        
+        if not data_list:
+            self.log(f"筛选请求失败: 没有找到对应的筛选数据 from {websocket.remote_address}", 'WARNING')
+            response = C2SPackageHelper.error("没有找到对应的筛选数据")
+            await websocket.send(response)
+            self.log(f"发送筛选失败响应: {response}", 'DEBUG')
             return
         
         # 发送筛选接收成功信号
-        filter_received_response = C2SPackageHelper.create_filter_response(C2SPackageHelper.STATUS_RECEIVED)
-        print(f"[{datetime.now()}] 发送筛选接收响应: {filter_received_response}")
-        await websocket.send(filter_received_response)
+        received_response = C2SPackageHelper.filter_received()
+        await websocket.send(received_response)
+        self.log(f"发送筛选接收成功响应: {received_response}", 'DEBUG')
         
-        # 将选中的数据保存到数据库
-        for idx in selected_ids:
-            if 0 <= idx < len(search_results_cache[search_id]):
-                item = search_results_cache[search_id][idx]
-                self.db_cursor.execute(
-                    "INSERT INTO data_records (title, summary, image_url, url, source) VALUES (?, ?, ?, ?, ?)",
-                    (item["title"], item["summary"], item["image_url"], item["url"], item["source"])
+        # 将选中的数据入库
+        self.log(f"开始将数据入库: 数据数量={len(data_list)}", 'INFO')
+        for item in data_list:
+            try:
+                self.db.add_data_record(
+                    item.get('title', ''),
+                    item.get('summary', ''),
+                    item.get('image_url', ''),
+                    item.get('source_url', ''),
+                    item.get('data_source', '')
                 )
+                self.log(f"数据入库成功: 标题={item.get('title', '')}", 'DEBUG')
+            except Exception as e:
+                self.log(f"数据入库失败: 标题={item.get('title', '')} - 错误: {e}", 'ERROR')
         
-        self.db_conn.commit()
-        
-        # 发送入库完成信号
-        filter_completed_response = C2SPackageHelper.create_filter_response(C2SPackageHelper.STATUS_COMPLETED)
-        print(f"[{datetime.now()}] 发送筛选完成响应: {filter_completed_response}")
-        await websocket.send(filter_completed_response)
+        # 发送筛选完成信号
+        completed_response = C2SPackageHelper.filter_completed()
+        await websocket.send(completed_response)
+        self.log(f"发送筛选完成响应: {completed_response}", 'DEBUG')
     
-    async def handle_refresh_data(self, websocket, data):
-        """处理数据管理页面刷新请求"""
-        search_content = data.get("search_content", "")
-        search_field = data.get("search_field", "title")
-        
+    # 处理数据管理页面刷新
+    async def handle_refresh_data_management(self, websocket):
         # 发送正在读取信号
-        data_processing_response = C2SPackageHelper.create_data_response(C2SPackageHelper.STATUS_PROCESSING)
-        print(f"[{datetime.now()}] 发送数据处理响应: {data_processing_response}")
-        await websocket.send(data_processing_response)
+        await websocket.send(C2SPackageHelper.reading_data())
         
-        # 构建查询语句
-        if search_content:
-            query = f"SELECT id, title, summary, image_url, url, source, created_at FROM data_records WHERE {search_field} LIKE ? ORDER BY created_at DESC"
-            self.db_cursor.execute(query, (f"%{search_content}%",))
-        else:
-            self.db_cursor.execute("SELECT id, title, summary, image_url, url, source, created_at FROM data_records ORDER BY created_at DESC")
+        # 读取数据库中的数据
+        data_list = self.db.get_data_records()
         
-        records = self.db_cursor.fetchall()
-        
-        # 格式化数据
-        formatted_records = []
-        for record in records:
-            formatted_records.append({
-                "id": record[0],
-                "title": record[1],
-                "summary": record[2],
-                "image_url": record[3],
-                "url": record[4],
-                "source": record[5],
-                "created_at": record[6]
+        # 转换数据格式
+        formatted_data = []
+        for item in data_list:
+            formatted_data.append({
+                'id': item[0],
+                'title': item[1],
+                'summary': item[2],
+                'image_url': item[3],
+                'source_url': item[4],
+                'data_source': item[5],
+                'created_at': item[6]
             })
         
-        # 发送数据完成信号和记录
-        data_response = C2SPackageHelper.create_data_response(
-            C2SPackageHelper.STATUS_COMPLETED, formatted_records
-        )
-        print(f"[{datetime.now()}] 发送数据完成响应: {data_response}")
-        await websocket.send(data_response)
+        # 发送数据读取完成信号和数据
+        await websocket.send(C2SPackageHelper.data_read_completed(formatted_data))
     
+    # 处理数据删除
     async def handle_delete_data(self, websocket, data):
-        """处理数据删除请求"""
-        record_ids = data.get("record_ids", [])
+        selected_ids = data.get('selected_ids', [])
+        
+        if not selected_ids:
+            await websocket.send(C2SPackageHelper.error("没有要删除的数据"))
+            return
         
         # 发送正在删除信号
-        delete_processing_response = C2SPackageHelper.create_data_response(C2SPackageHelper.STATUS_PROCESSING)
-        print(f"[{datetime.now()}] 发送删除处理响应: {delete_processing_response}")
-        await websocket.send(delete_processing_response)
+        await websocket.send(C2SPackageHelper.deleting_data())
         
         # 删除选中的数据
-        if record_ids:
-            placeholders = ",".join(["?"] * len(record_ids))
-            query = f"DELETE FROM data_records WHERE id IN ({placeholders})"
-            self.db_cursor.execute(query, record_ids)
-            self.db_conn.commit()
+        for record_id in selected_ids:
+            self.db.delete_data_record(record_id)
         
         # 发送删除完成信号
-        delete_completed_response = C2SPackageHelper.create_data_response(C2SPackageHelper.STATUS_COMPLETED)
-        print(f"[{datetime.now()}] 发送删除完成响应: {delete_completed_response}")
-        await websocket.send(delete_completed_response)
+        await websocket.send(C2SPackageHelper.data_deleted())
         
-        # 重新读取数据
-        await self.handle_refresh_data(websocket, {})
+        # 重新读取数据库并发送数据
+        await self.handle_refresh_data_management(websocket)
     
-    async def handle_refresh_sources(self, websocket):
-        """处理搜索源管理页面刷新请求"""
+    # 处理搜索源管理页面刷新
+    async def handle_refresh_search_source_management(self, websocket):
         # 发送正在寻找搜索源信号
-        source_processing_response = C2SPackageHelper.create_source_response(C2SPackageHelper.STATUS_PROCESSING)
-        print(f"[{datetime.now()}] 发送搜索源处理响应: {source_processing_response}")
-        await websocket.send(source_processing_response)
+        await websocket.send(C2SPackageHelper.finding_search_sources())
         
         # 获取所有搜索源
-        self.db_cursor.execute("SELECT id, name, filename, is_blacklisted FROM search_sources")
-        sources = self.db_cursor.fetchall()
+        all_sources = self.search_source_manager.get_all_sources()
         
-        # 格式化数据
+        # 转换数据格式
         formatted_sources = []
-        for source in sources:
+        for source in all_sources:
             formatted_sources.append({
-                "id": source[0],
-                "name": source[1],
-                "filename": source[2],
-                "is_blacklisted": bool(source[3])
+                'id': source['id'],
+                'name': source['display_name'] if 'display_name' in source else source['name'],
+                'description': source['description'] if 'description' in source else '',
+                'is_active': source['enabled']
             })
         
         # 发送搜索源寻找完成信号和数据
-        source_response = C2SPackageHelper.create_source_response(
-            C2SPackageHelper.STATUS_COMPLETED, formatted_sources
-        )
-        print(f"[{datetime.now()}] 发送搜索源完成响应: {source_response}")
-        await websocket.send(source_response)
+        await websocket.send(C2SPackageHelper.search_sources_found(formatted_sources))
     
-    async def handle_toggle_source(self, websocket, data):
-        """处理搜索源启用/禁用请求"""
-        source_id = data.get("source_id")
-        is_blacklisted = data.get("is_blacklisted")
+    # 处理搜索源禁用
+    async def handle_disable_search_source(self, websocket, data):
+        source_id = data.get('source_id')
         
-        # 更新搜索源状态
-        self.db_cursor.execute(
-            "UPDATE search_sources SET is_blacklisted = ? WHERE id = ?",
-            (1 if is_blacklisted else 0, source_id)
-        )
-        self.db_conn.commit()
+        if not source_id:
+            await websocket.send(C2SPackageHelper.error("没有指定要禁用的搜索源"))
+            return
         
-        # 重新读取搜索源
-        await self.handle_refresh_sources(websocket)
+        # 发送正在禁用信号
+        await websocket.send(C2SPackageHelper.disabling_search_source())
         
-    async def handle_send_verification_code(self, websocket, data):
-        """处理发送验证码请求"""
-        phone_number = data.get("phone_number")
+        # 将搜索源加入黑名单
+        self.db.add_to_blacklist(source_id)
         
-        # 这里应该实现真实的验证码发送逻辑
-        # 由于是模拟环境，我们直接返回成功
+        # 重新加载搜索源
+        self.search_source_manager = SearchSourceManager(self.db.get_blacklist())
         
-        sms_response = C2SPackageHelper.create_sms_response(
-            C2SPackageHelper.STATUS_SUCCESS, {
-                "message": "验证码发送成功"
-            }
-        )
-        await websocket.send(sms_response)
+        # 发送搜索源状态更新信号和数据
+        all_sources = self.search_source_manager.get_all_sources()
+        formatted_sources = []
+        for source in all_sources:
+            formatted_sources.append({
+                'id': source['id'],
+                'name': source['display_name'] if 'display_name' in source else source['name'],
+                'description': source['description'] if 'description' in source else '',
+                'is_active': source['enabled']
+            })
         
-    async def handle_submit_verification(self, websocket, data):
-        """处理提交实名认证信息请求"""
-        real_name = data.get("real_name")
-        id_card = data.get("id_card")
-        phone_number = data.get("phone_number")
-        verification_code = data.get("verification_code")
-        request_id = data.get("request_id")
-        username = data.get("username")
-        
-        # 这里应该实现真实的验证码验证和实名认证逻辑
-        # 由于是模拟环境，我们直接将状态设置为"审核中"
-        
-        # 获取当前用户
-        username = self.current_users.get(websocket)
-        if username:
-            # 更新用户实名认证信息
-            self.db_cursor.execute("""
-                UPDATE users 
-                SET real_name = ?, id_card = ?, phone_number = ?, verification_status = 1
-                WHERE username = ?
-            """, (real_name, id_card, phone_number, username))
-            self.db_conn.commit()
-            
-            verification_response = C2SPackageHelper.create_verification_response(
-                C2SPackageHelper.STATUS_SUCCESS, {
-                    "message": "实名认证提交成功，正在审核中"
-                }
-            )
-            await websocket.send(verification_response)
+        await websocket.send(C2SPackageHelper.search_source_status_updated(formatted_sources))
     
-    async def handle_refresh_profile(self, websocket, data):
-        """处理个人资料刷新请求"""
-        username = data.get("username")
+    # 处理搜索源启用
+    async def handle_enable_search_source(self, websocket, data):
+        source_id = data.get('source_id')
         
-        # 获取用户信息（包括实名认证相关字段）
-        self.db_cursor.execute("SELECT username, permission_level, real_name, id_card, phone_number, verification_status, verification_reason FROM users WHERE username = ?", (username,))
-        user = self.db_cursor.fetchone()
+        if not source_id:
+            await websocket.send(C2SPackageHelper.error("没有指定要启用的搜索源"))
+            return
         
-        if user:
-            profile_data = {
-                "username": user[0],
-                "permission_level": user[1],
-                "real_name": user[2],
-                "id_card": user[3],
-                "phone_number": user[4],
-                "verification_status": user[5] or 0,
-                "verification_reason": user[6]
-            }
-            profile_response = C2SPackageHelper.create_profile_response(
-                C2SPackageHelper.STATUS_COMPLETED, profile_data
-            )
-            print(f"[{datetime.now()}] 发送个人资料响应: {profile_response}")
-            await websocket.send(profile_response)
-        else:
-            profile_response = C2SPackageHelper.create_profile_response(C2SPackageHelper.STATUS_FAILED)
-            print(f"[{datetime.now()}] 发送个人资料响应: {profile_response}")
-            await websocket.send(profile_response)
+        # 发送正在禁用信号（复用同一个信号）
+        await websocket.send(C2SPackageHelper.disabling_search_source())
+        
+        # 将搜索源从黑名单中移除
+        self.db.remove_from_blacklist(source_id)
+        
+        # 重新加载搜索源
+        self.search_source_manager = SearchSourceManager(self.db.get_blacklist())
+        
+        # 发送搜索源状态更新信号和数据
+        all_sources = self.search_source_manager.get_all_sources()
+        formatted_sources = []
+        for source in all_sources:
+            formatted_sources.append({
+                'id': source['id'],
+                'name': source['display_name'] if 'display_name' in source else source['name'],
+                'description': source['description'] if 'description' in source else '',
+                'is_active': source['enabled']
+            })
+        
+        await websocket.send(C2SPackageHelper.search_source_status_updated(formatted_sources))
     
     async def start_server(self):
-        """启动WebSocket服务器"""
-        async with websockets.serve(lambda ws: self.handle_client(ws), self.host, self.port):
-            print(f"WebSocket服务器已启动，监听 {self.host}:{self.port}")
-            await asyncio.Future()  # 保持服务器运行
-
-def main():
-    """主函数"""
-    server = WebSocketServer()
-    asyncio.run(server.start_server())
+        """
+        启动WebSocket服务器
+        """
+        try:
+            server = await websockets.serve(
+                self.handle_client,
+                self.host,
+                self.port
+            )
+            
+            self.log(f"WebSocket服务器已成功启动，地址: ws://{self.host}:{self.port}", 'INFO')
+            
+            await server.wait_closed()
+        
+        except Exception as e:
+            self.log(f"WebSocket服务器启动失败: {str(e)}", 'CRITICAL')
+            raise
 
 if __name__ == "__main__":
-    main()
+    server = WebSocketServer()
+    asyncio.run(server.start_server())
