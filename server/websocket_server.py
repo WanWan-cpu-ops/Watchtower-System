@@ -452,7 +452,7 @@ class WebSocketServer:
         self.log(f"开始处理保存爬虫规则请求: 数据={data} from {websocket.remote_address}", 'INFO')
         
         # 验证必填字段
-        required_fields = ['source_id', 'source_name', 'title_xpath', 'content_xpath', 'request_headers']
+        required_fields = ['source_id', 'source_name', 'title_xpath', 'content_xpath', 'url_xpath', 'request_headers']
         for field in required_fields:
             if field not in data:
                 self.log(f"保存爬虫规则失败: 缺少字段 {field} from {websocket.remote_address}", 'WARNING')
@@ -466,39 +466,25 @@ class WebSocketServer:
         
         try:
             # 保存爬虫规则到数据库
-            self.log(f"准备保存爬虫规则: 数据={data} from {websocket.remote_address}", 'DEBUG')
-            
-            # 将request_headers从dict转换为字符串
-            import json
-            request_headers_str = json.dumps(data['request_headers'])
-            
             rule_id = self.db.add_crawler_rule(
                 source_id=data['source_id'],
                 source_name=data['source_name'],
                 title_xpath=data['title_xpath'],
                 content_xpath=data['content_xpath'],
                 image_xpath=data.get('image_xpath', ''),
-                url_xpath=data.get('url_xpath', ''),
-                request_headers=request_headers_str,
+                url_xpath=data['url_xpath'],
+                request_headers=data['request_headers'],
                 status=data.get('status', 1),
                 remarks=data.get('remarks', '')
             )
             
-            if rule_id is not None:
-                self.log(f"爬虫规则保存成功: 规则ID={rule_id} from {websocket.remote_address}", 'INFO')
-                saved_response = C2SPackageHelper.crawler_rule_saved(rule_id)
-                await websocket.send(saved_response)
-                self.log(f"发送保存完成响应: {saved_response}", 'DEBUG')
-            else:
-                self.log(f"爬虫规则保存失败: add_crawler_rule返回None from {websocket.remote_address}", 'ERROR')
-                error_response = C2SPackageHelper.error("保存爬虫规则失败: 数据库操作失败")
-                await websocket.send(error_response)
-                self.log(f"发送保存失败响应: {error_response}", 'DEBUG')
-                
+            self.log(f"爬虫规则保存成功: 规则ID={rule_id} from {websocket.remote_address}", 'INFO')
+            saved_response = C2SPackageHelper.crawler_rule_saved(rule_id)
+            await websocket.send(saved_response)
+            self.log(f"发送保存完成响应: {saved_response}", 'DEBUG')
+            
         except Exception as e:
             self.log(f"保存爬虫规则失败: 错误={str(e)} from {websocket.remote_address}", 'ERROR')
-            import traceback
-            self.log(f"错误堆栈: {traceback.format_exc()}", 'ERROR')
             error_response = C2SPackageHelper.error(f"保存爬虫规则失败: {str(e)}")
             await websocket.send(error_response)
             self.log(f"发送保存失败响应: {error_response}", 'DEBUG')
@@ -530,8 +516,7 @@ class WebSocketServer:
                 'status': rule[8],
                 'remarks': rule[9],
                 'created_at': rule[10],
-                'updated_at': rule[11],
-                'is_enabled': rule[12] == 1
+                'is_enabled': rule[8] == 1
             })
         
         self.log(f"读取到 {len(formatted_rules)} 条爬虫规则 from {websocket.remote_address}", 'INFO')

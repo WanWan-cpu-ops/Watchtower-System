@@ -599,3 +599,82 @@
 2025-12-06 14:23:00,771 - INFO - connection open
 2025-12-06 14:23:08,600 - INFO - connection closed
 2025-12-06 14:23:08,934 - INFO - connection open
+2025-12-06 14:54:35,747 - INFO - connection closed
+2025-12-06 14:54:36,393 - INFO - connection open
+2025-12-06 15:21:01,248 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 15:21:01,249 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:21:06,369 - INFO - 请求成功，状态码: 200
+2025-12-06 15:21:06,370 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:21:06,373 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 15:21:06,436 - INFO - 找到 4 个搜索结果项
+2025-12-06 15:21:06,437 - INFO - 提取概要: æˆ�éƒ½å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 15:21:06,439 - INFO - 提取概要: ã€Šæ­Œæ‰‹ã€‹ç¬¬ä¸‰æœŸå�ŸéŸ³é‡�ç�°:èµµé›·æ¸…æ–°æ¼”ç...
+2025-12-06 15:21:06,441 - INFO - 提取概要: ç¬¬ä¸€æ¬¡æ�¥æˆ�éƒ½,å¦¹å­�è¢«è¿™åŸ�å»ºéœ‡æ’¼åˆ°äº†,...
+2025-12-06 15:21:06,443 - INFO - 提取概要: å››å·�çœ�æˆ�éƒ½å¸‚ç®€ä»‹...
+2025-12-06 15:21:06,444 - INFO - 成功提取并去重 4 条搜索结果
+2025-12-06 15:21:06,444 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 15:23:12,281 - INFO - connection closed
+2025-12-06 15:24:24,260 - INFO - connection open
+2025-12-06 15:24:53,683 - INFO - connection closed
+2025-12-06 15:25:40,831 - INFO - connection open
+2025-12-06 15:26:39,095 - INFO - connection closed
+2025-12-06 15:26:48,573 - INFO - connection open
+2025-12-06 15:27:00,425 - INFO - connection closed
+2025-12-06 15:27:01,009 - INFO - connection open
+2025-12-06 15:27:44,529 - INFO - connection closed
+2025-12-06 15:30:56,849 - INFO - server listening on [::1]:8000
+2025-12-06 15:30:56,849 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 15:30:56,855 - INFO - connection open
+2025-12-06 15:33:12,998 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 15:33:12,998 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:33:16,311 - INFO - 请求成功，状态码: 200
+2025-12-06 15:33:16,312 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:33:16,319 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 15:33:16,378 - INFO - 找到 4 个搜索结果项
+2025-12-06 15:33:16,381 - INFO - 提取概要: æˆ�éƒ½å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 15:33:16,382 - INFO - 提取概要: ã€Šæ­Œæ‰‹ã€‹ç¬¬ä¸‰æœŸå�ŸéŸ³é‡�ç�°:èµµé›·æ¸…æ–°æ¼”ç...
+2025-12-06 15:33:16,384 - INFO - 提取概要: ç¬¬ä¸€æ¬¡æ�¥æˆ�éƒ½,å¦¹å­�è¢«è¿™åŸ�å»ºéœ‡æ’¼åˆ°äº†,...
+2025-12-06 15:33:16,385 - INFO - 提取概要: å››å·�çœ�æˆ�éƒ½å¸‚ç®€ä»‹...
+2025-12-06 15:33:16,386 - INFO - 成功提取并去重 4 条搜索结果
+2025-12-06 15:33:16,386 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 15:34:21,486 - INFO - connection closed
+2025-12-06 15:34:22,191 - INFO - connection open
+2025-12-06 15:34:25,084 - INFO - connection closed
+2025-12-06 15:34:25,719 - INFO - connection open
+2025-12-06 15:34:44,939 - INFO - connection closed
+2025-12-06 15:34:45,580 - INFO - connection open
+2025-12-06 15:34:51,792 - INFO - connection closed
+2025-12-06 15:34:52,426 - INFO - connection open
+2025-12-06 15:34:56,414 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 15:34:56,414 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:34:59,413 - INFO - 请求成功，状态码: 200
+2025-12-06 15:34:59,414 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:34:59,417 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 15:34:59,478 - INFO - 找到 4 个搜索结果项
+2025-12-06 15:34:59,479 - INFO - 提取概要: æˆ�éƒ½å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 15:34:59,481 - INFO - 提取概要: ã€Šæ­Œæ‰‹ã€‹ç¬¬ä¸‰æœŸå�ŸéŸ³é‡�ç�°:èµµé›·æ¸…æ–°æ¼”ç...
+2025-12-06 15:34:59,482 - INFO - 提取概要: ç¬¬ä¸€æ¬¡æ�¥æˆ�éƒ½,å¦¹å­�è¢«è¿™åŸ�å»ºéœ‡æ’¼åˆ°äº†,...
+2025-12-06 15:34:59,484 - INFO - 提取概要: å››å·�çœ�æˆ�éƒ½å¸‚ç®€ä»‹...
+2025-12-06 15:34:59,484 - INFO - 成功提取并去重 4 条搜索结果
+2025-12-06 15:34:59,485 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 15:36:34,222 - INFO - connection closed
+2025-12-06 15:36:53,187 - INFO - connection open
+2025-12-06 15:37:02,020 - INFO - connection closed
+2025-12-06 15:37:02,041 - INFO - connection open
+2025-12-06 15:37:05,282 - INFO - connection closed
+2025-12-06 15:37:11,157 - INFO - connection open
+2025-12-06 15:37:18,037 - INFO - connection closed
+2025-12-06 15:37:18,060 - INFO - connection open
+2025-12-06 15:37:24,987 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 15:37:24,988 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:37:29,881 - INFO - 请求成功，状态码: 200
+2025-12-06 15:37:29,882 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 15:37:29,885 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 15:37:29,950 - INFO - 找到 4 个搜索结果项
+2025-12-06 15:37:29,952 - INFO - 提取概要: æˆ�éƒ½å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 15:37:29,954 - INFO - 提取概要: ã€Šæ­Œæ‰‹ã€‹ç¬¬ä¸‰æœŸå�ŸéŸ³é‡�ç�°:èµµé›·æ¸…æ–°æ¼”ç...
+2025-12-06 15:37:29,955 - INFO - 提取概要: ç¬¬ä¸€æ¬¡æ�¥æˆ�éƒ½,å¦¹å­�è¢«è¿™åŸ�å»ºéœ‡æ’¼åˆ°äº†,...
+2025-12-06 15:37:29,957 - INFO - 提取概要: å››å·�çœ�æˆ�éƒ½å¸‚ç®€ä»‹...
+2025-12-06 15:37:29,957 - INFO - 成功提取并去重 4 条搜索结果
+2025-12-06 15:37:29,958 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 15:39:45,501 - INFO - connection closed

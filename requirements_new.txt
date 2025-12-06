@@ -1,0 +1,6 @@
+websockets==10.3
+requests==2.28.1
+beautifulsoup4==4.11.1
+lxml>=5.3.0
+peewee==3.15.3
+python-dotenv==1.0.0

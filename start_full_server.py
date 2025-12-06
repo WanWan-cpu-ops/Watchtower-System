@@ -13,6 +13,14 @@ import http.server
 import socketserver
 import threading
 
+# 检查是否在虚拟环境中运行
+if not hasattr(sys, 'base_prefix') or sys.base_prefix == sys.prefix:
+    print("错误: 该应用程序必须在虚拟环境中运行!")
+    print("请先激活虚拟环境，然后再运行此脚本:")
+    print("Windows: venv\\Scripts\\activate.bat")
+    print("Linux/Mac: source venv/bin/activate")
+    sys.exit(1)
+
 # 添加项目根目录到Python路径
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
