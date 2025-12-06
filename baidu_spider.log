@@ -296,3 +296,159 @@
 2025-12-04 20:57:30,952 - INFO - connection open
 2025-12-04 20:57:35,592 - INFO - connection open
 2025-12-04 20:57:48,683 - INFO - connection open
+2025-12-04 21:00:56,700 - INFO - connection open
+2025-12-04 21:01:20,417 - INFO - connection open
+2025-12-04 21:01:25,745 - INFO - 原始关键词: 宜宾, 编码后: %E5%AE%9C%E5%AE%BE
+2025-12-04 21:01:25,745 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 21:01:27,697 - INFO - 请求成功，状态码: 200
+2025-12-04 21:01:27,697 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 21:01:27,703 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_宜宾_1.json'
+2025-12-04 21:01:27,791 - INFO - 找到 3 个搜索结果项
+2025-12-04 21:01:27,795 - INFO - 提取概要: 宜宾市人民政府网站宜宾市人民政府网站是宜宾市人民政府对外宣传的窗口,是推进电子政务的重要一环,是宜宾...
+2025-12-04 21:01:27,797 - INFO - 提取概要: 【宜宾天气预报15天_宜宾天气预报15天查询】-中国天气网...
+2025-12-04 21:01:27,800 - INFO - 提取概要: 走进万里长江第一城,四川宜宾市,这里也是长江的起点,旅游,旅游......
+2025-12-04 21:01:27,800 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 21:01:27,801 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_宜宾.json'
+2025-12-04 21:01:57,313 - INFO - 原始关键词: 宜宾, 编码后: %E5%AE%9C%E5%AE%BE
+2025-12-04 21:01:57,314 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 21:01:58,700 - INFO - 请求成功，状态码: 200
+2025-12-04 21:01:58,702 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 21:01:58,709 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_宜宾_1.json'
+2025-12-04 21:01:58,871 - INFO - 找到 3 个搜索结果项
+2025-12-04 21:01:58,878 - INFO - 提取概要: 宜宾市人民政府网站宜宾市人民政府网站是宜宾市人民政府对外宣传的窗口,是推进电子政务的重要一环,是宜宾...
+2025-12-04 21:01:58,882 - INFO - 提取概要: 【宜宾天气预报15天_宜宾天气预报15天查询】-中国天气网...
+2025-12-04 21:01:58,886 - INFO - 提取概要: 走进万里长江第一城,四川宜宾市,这里也是长江的起点,旅游,旅游......
+2025-12-04 21:01:58,887 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 21:01:58,888 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_宜宾.json'
+2025-12-04 21:02:06,435 - INFO - 原始关键词: 宜宾, 编码后: %E5%AE%9C%E5%AE%BE
+2025-12-04 21:02:06,435 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 21:02:07,830 - INFO - 请求成功，状态码: 200
+2025-12-04 21:02:07,830 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%AE%9C%E5%AE%BE&pn=0
+2025-12-04 21:02:07,836 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_宜宾_1.json'
+2025-12-04 21:02:07,983 - INFO - 找到 3 个搜索结果项
+2025-12-04 21:02:07,994 - INFO - 提取概要: 宜宾市人民政府网站宜宾市人民政府网站是宜宾市人民政府对外宣传的窗口,是推进电子政务的重要一环,是宜宾...
+2025-12-04 21:02:07,997 - INFO - 提取概要: 【宜宾天气预报15天_宜宾天气预报15天查询】-中国天气网...
+2025-12-04 21:02:08,001 - INFO - 提取概要: 走进万里长江第一城,四川宜宾市,这里也是长江的起点,旅游,旅游......
+2025-12-04 21:02:08,002 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 21:02:08,003 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_宜宾.json'
+2025-12-04 21:02:33,363 - INFO - 原始关键词: 川菜, 编码后: %E5%B7%9D%E8%8F%9C
+2025-12-04 21:02:33,363 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%B7%9D%E8%8F%9C&pn=0
+2025-12-04 21:02:34,811 - INFO - 请求成功，状态码: 200
+2025-12-04 21:02:34,812 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%B7%9D%E8%8F%9C&pn=0
+2025-12-04 21:02:34,820 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_川菜_1.json'
+2025-12-04 21:02:35,005 - INFO - 找到 3 个搜索结果项
+2025-12-04 21:02:35,009 - INFO - 提取概要: 川菜- 百度百科“樟茶鸭子”是川菜宴席的一款名菜。此菜是选用成都南路鸭。[详细] 回锅肉 回锅肉是中...
+2025-12-04 21:02:35,011 - INFO - 提取概要: 川菜作为具有世界影响力的特大菜系,一直是中餐国际化的“排头兵” 让......
+2025-12-04 21:02:35,015 - INFO - 提取概要: 家常川菜(下厨房)家常川菜来自李牧渊 爆炒腰花 有你很满足娟 7.7 综合评分 (675 人做过) ...
+2025-12-04 21:02:35,016 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 21:02:35,016 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_川菜.json'
+2025-12-04 21:02:45,678 - INFO - connection open
+2025-12-04 21:02:54,289 - INFO - connection open
+2025-12-04 21:03:06,752 - INFO - 原始关键词: 川菜, 编码后: %E5%B7%9D%E8%8F%9C
+2025-12-04 21:03:06,753 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%B7%9D%E8%8F%9C&pn=0
+2025-12-04 21:03:08,187 - INFO - 请求成功，状态码: 200
+2025-12-04 21:03:08,187 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%B7%9D%E8%8F%9C&pn=0
+2025-12-04 21:03:08,192 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_川菜_1.json'
+2025-12-04 21:03:08,327 - INFO - 找到 3 个搜索结果项
+2025-12-04 21:03:08,331 - INFO - 提取概要: 川菜- 百度百科“樟茶鸭子”是川菜宴席的一款名菜。此菜是选用成都南路鸭。[详细] 回锅肉 回锅肉是中...
+2025-12-04 21:03:08,333 - INFO - 提取概要: 川菜作为具有世界影响力的特大菜系,一直是中餐国际化的“排头兵” 让......
+2025-12-04 21:03:08,340 - INFO - 提取概要: 家常川菜(下厨房)家常川菜来自李牧渊 爆炒腰花 有你很满足娟 7.7 综合评分 (675 人做过) ...
+2025-12-04 21:03:08,340 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-04 21:03:08,342 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_川菜.json'
+2025-12-04 21:59:27,039 - INFO - connection open
+2025-12-06 10:14:21,947 - INFO - server listening on [::1]:8000
+2025-12-06 10:14:21,948 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 10:47:29,128 - INFO - server listening on [::1]:8000
+2025-12-06 10:47:29,129 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 10:47:34,809 - INFO - connection open
+2025-12-06 10:49:11,872 - INFO - connection open
+2025-12-06 10:49:21,626 - INFO - connection open
+2025-12-06 10:52:24,296 - INFO - connection open
+2025-12-06 10:52:37,710 - INFO - connection open
+2025-12-06 10:52:46,037 - INFO - connection open
+2025-12-06 10:54:46,605 - INFO - connection open
+2025-12-06 10:54:58,685 - INFO - connection open
+2025-12-06 10:55:22,762 - INFO - connection open
+2025-12-06 10:56:57,243 - INFO - connection open
+2025-12-06 10:57:00,008 - INFO - connection open
+2025-12-06 10:57:07,936 - INFO - connection open
+2025-12-06 11:00:12,837 - INFO - connection open
+2025-12-06 11:00:21,289 - INFO - connection open
+2025-12-06 11:00:44,617 - INFO - connection open
+2025-12-06 11:00:52,318 - INFO - connection open
+2025-12-06 11:26:30,029 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 11:26:30,029 - INFO - server listening on [::1]:8000
+2025-12-06 11:26:30,142 - INFO - connection open
+2025-12-06 11:26:35,727 - INFO - connection open
+2025-12-06 11:27:23,875 - INFO - connection closed
+2025-12-06 11:27:24,555 - INFO - connection open
+2025-12-06 11:27:31,908 - INFO - connection closed
+2025-12-06 11:27:32,494 - INFO - connection open
+2025-12-06 11:28:08,407 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 11:28:08,407 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 11:28:12,414 - INFO - 请求成功，状态码: 200
+2025-12-06 11:28:12,414 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 11:28:12,421 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 11:28:12,476 - INFO - 找到 5 个搜索结果项
+2025-12-06 11:28:12,479 - INFO - 提取概要: æˆ�éƒ½å¸‚æƒ…-æˆ�éƒ½å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 11:28:12,480 - INFO - 提取概要: ç¬¬ä¸€æ¬¡æ�¥æˆ�éƒ½,å¦¹å­�è¢«è¿™åŸ�å»ºéœ‡æ’¼åˆ°äº†,...
+2025-12-06 11:28:12,482 - INFO - 提取概要: å››å·�çœ�æˆ�éƒ½å¸‚ç®€ä»‹...
+2025-12-06 11:28:12,483 - INFO - 提取概要: ğŸŒ†æˆ�éƒ½åŒºåŸŸåˆ’åˆ†æ–°çŸ¥ ğŸŒ†...
+2025-12-06 11:28:12,485 - INFO - 提取概要: ã€Šæ­Œæ‰‹ã€‹ç¬¬ä¸‰æœŸå�ŸéŸ³é‡�ç�°:èµµé›·æ¸…æ–°æ¼”ç...
+2025-12-06 11:28:12,486 - INFO - 成功提取并去重 5 条搜索结果
+2025-12-06 11:28:12,486 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 11:28:14,258 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 11:28:14,258 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 11:28:17,637 - INFO - 请求成功，状态码: 200
+2025-12-06 11:28:17,637 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 11:28:17,641 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 11:28:17,697 - INFO - 找到 2 个搜索结果项
+2025-12-06 11:28:17,699 - INFO - 提取概要: æˆ�éƒ½å¸‚æƒ…-æˆ�éƒ½å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 11:28:17,701 - INFO - 提取概要: ç¬¬ä¸€æ¬¡æ�¥æˆ�éƒ½,å¦¹å­�è¢«è¿™åŸ�å»ºéœ‡æ’¼åˆ°äº†,...
+2025-12-06 11:28:17,703 - INFO - 成功提取并去重 2 条搜索结果
+2025-12-06 11:28:17,703 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 11:29:33,595 - INFO - connection closed
+2025-12-06 11:29:52,384 - INFO - connection open
+2025-12-06 11:30:13,408 - INFO - connection closed
+2025-12-06 11:30:13,732 - INFO - connection open
+2025-12-06 11:31:32,843 - INFO - connection closed
+2025-12-06 11:31:33,483 - INFO - connection open
+2025-12-06 11:31:39,319 - INFO - 原始关键词: 四川农业大学, 编码后: %E5%9B%9B%E5%B7%9D%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6
+2025-12-06 11:31:39,319 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%9B%9B%E5%B7%9D%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6&pn=0
+2025-12-06 11:31:43,000 - INFO - 请求成功，状态码: 200
+2025-12-06 11:31:43,001 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%9B%9B%E5%B7%9D%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6&pn=0
+2025-12-06 11:31:43,004 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_四川农业大学_1.json'
+2025-12-06 11:31:43,065 - INFO - 找到 3 个搜索结果项
+2025-12-06 11:31:43,068 - INFO - 提取概要: å››å·�å†œä¸šå¤§å­¦...
+2025-12-06 11:31:43,071 - INFO - 提取概要: æœ€å·®211?å››å·�å†œä¸šå¤§å­¦åˆ°åº•èƒ½ä¸�èƒ½æŠ¥?_å“...
+2025-12-06 11:31:43,075 - INFO - 提取概要: å››å·�å†œä¸šå¤§å­¦åœ¨211æ�’å��å¤šå°‘...
+2025-12-06 11:31:43,075 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-06 11:31:43,076 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_四川农业大学.json'
+2025-12-06 11:32:49,978 - INFO - connection closed
+2025-12-06 11:32:50,617 - INFO - connection open
+2025-12-06 11:33:32,824 - INFO - connection closed
+2025-12-06 11:33:33,405 - INFO - connection open
+2025-12-06 11:38:27,955 - INFO - connection closed
+2025-12-06 11:42:17,502 - INFO - connection closed
+2025-12-06 11:46:32,615 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 11:46:32,616 - INFO - server listening on [::1]:8000
+2025-12-06 11:46:32,668 - INFO - connection open
+2025-12-06 11:46:37,146 - INFO - connection open
+2025-12-06 11:47:20,859 - INFO - connection closed
+2025-12-06 11:47:26,016 - INFO - connection open
+2025-12-06 11:47:35,000 - INFO - connection closed
+2025-12-06 11:47:35,577 - INFO - connection open
+2025-12-06 11:47:49,624 - INFO - 原始关键词: 你好, 编码后: %E4%BD%A0%E5%A5%BD
+2025-12-06 11:47:49,624 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E4%BD%A0%E5%A5%BD&pn=0
+2025-12-06 11:47:53,070 - INFO - 请求成功，状态码: 200
+2025-12-06 11:47:53,071 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E4%BD%A0%E5%A5%BD&pn=0
+2025-12-06 11:47:53,075 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_你好_1.json'
+2025-12-06 11:47:53,124 - INFO - 找到 6 个搜索结果项
+2025-12-06 11:47:53,126 - INFO - 提取概要: ä½ å¥½_è¯�è¯­_æˆ�è¯­_ç™¾åº¦æ±‰è¯­...
+2025-12-06 11:47:53,127 - INFO - 提取概要: ä½ å¥½çš„è‹±è¯­æ€�ä¹ˆå†™-ç™¾åº¦çŸ¥äº†å¥½å­¦...
+2025-12-06 11:47:53,130 - INFO - 提取概要: â€œä½ å¥½â€�çš„è‹±æ–‡å¹¶é��Ciallo,å†…å®¹æ··ä¹±æ— å...
+2025-12-06 11:47:53,131 - INFO - 提取概要: ä½ å¥½è‹±æ–‡æ€�ä¹ˆè¯»,æ•™è‚²,å…´è¶£å­¦ä¹ ,å¥½çœ‹è§...
+2025-12-06 11:47:53,132 - INFO - 提取概要: ä½ å¥½æ˜¯ä»€ä¹ˆæ„�æ€�_ä½ å¥½çš„ç¿»è¯‘_éŸ³æ ‡_è¯»éŸ...
+2025-12-06 11:47:53,134 - INFO - 提取概要: ä½ å¥½ä¸­æ–‡...
+2025-12-06 11:47:53,134 - INFO - 成功提取并去重 6 条搜索结果
+2025-12-06 11:47:53,135 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_你好.json'

@@ -723,6 +723,17 @@ function displayDataRecords() {
     });
 }
 
+// 从URL中提取域名
+function extractDomain(url) {
+    try {
+        const hostname = new URL(url).hostname;
+        // 移除www前缀
+        return hostname.replace(/^www\./, '');
+    } catch (error) {
+        return '';
+    }
+}
+
 // 创建数据项
 function createDataItem(record) {
     const item = document.createElement('div');
@@ -753,14 +764,57 @@ function createDataItem(record) {
         showDataCardDetail(record);
     });
     
-    // 数据项内容
+    // 提取域名
+    const domain = extractDomain(record.source_url);
+    
+    // 模拟采集和嗅探规则（实际应用中应从数据库获取）
+    const collectRule = '默认采集规则';
+    const sniffRule = '默认嗅探规则';
+    
+    // 数据项内容 - 使用表格布局确保各部分宽度固定
     item.innerHTML = `
-        <h3>${record.title}</h3>
-        <p>${record.summary}</p>
-        <span>来源: ${record.data_source} | 采集时间: ${record.collection_time}</span>
+        <div class="data-item-header">
+            <h3>${record.title}</h3>
+            ${domain ? `<p class="domain">域名: ${domain}</p>` : ''}
+        </div>
+        <div class="data-item-content">
+            <div class="data-rules">
+                <div class="rule-item">
+                    <span class="rule-label">采集规则:</span>
+                    <span class="rule-value">${collectRule}</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-label">嗅探规则:</span>
+                    <span class="rule-value">${sniffRule}</span>
+                </div>
+            </div>
+        </div>
+        <div class="data-item-footer">
+            <div class="data-meta">
+                <span>来源: ${record.data_source} | 采集时间: ${record.collection_time}</span>
+            </div>
+            <div class="data-actions">
+                <button class="action-btn collect-btn" onclick="collectData('${record.id}')">采集</button>
+                <button class="action-btn sniff-btn" onclick="sniffData('${record.id}')">嗅探</button>
+            </div>
+        </div>
     `;
     
     return item;
+}
+
+// 采集功能（待实现）
+function collectData(recordId) {
+    console.log('采集数据:', recordId);
+    // 显示提示信息
+    showStatusMessage('采集功能将在后续版本实现', 'info');
+}
+
+// 嗅探功能（待实现）
+function sniffData(recordId) {
+    console.log('嗅探数据:', recordId);
+    // 显示提示信息
+    showStatusMessage('嗅探功能将在后续版本实现', 'info');
 }
 
 // 更新数据项选择状态
