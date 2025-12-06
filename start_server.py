@@ -30,7 +30,7 @@ def main():
         from server.websocket_server import WebSocketServer
         
         # 创建并启动WebSocket服务器
-        server = WebSocketServer(host='localhost', port=8000)
+        server = WebSocketServer(host='localhost', port=8080)
         print("智能瞭望系统 服务器已启动")
         print(f"WebSocket地址: ws://{server.host}:{server.port}")
         print("按 Ctrl+C 停止服务器")

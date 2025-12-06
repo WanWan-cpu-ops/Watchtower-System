@@ -60,12 +60,15 @@ class C2SPackageHelper:
     # 数据管理相关数据包
     @staticmethod
     def reading_data(): 
-        return C2SPackageHelper.create_package('reading_data')
+        return C2SPackageHelper.create_package('data_management_response', {
+            'status': 'reading'
+        })
     
     @staticmethod
     def data_read_completed(data_list):
-        return C2SPackageHelper.create_package('data_read_completed', {
-            'data_list': data_list
+        return C2SPackageHelper.create_package('data_management_response', {
+            'status': 'completed',
+            'records': data_list
         })
     
     @staticmethod
@@ -97,6 +100,14 @@ class C2SPackageHelper:
             'source_list': source_list
         })
     
+    # 成功相关数据包
+    @staticmethod
+    def success(package_type, data=None):
+        return C2SPackageHelper.create_package(package_type, {
+            'success': True,
+            'data': data or {}
+        })
+    
     # 错误相关数据包
     @staticmethod
     def error(message='服务器错误'):
@@ -104,34 +115,3 @@ class C2SPackageHelper:
             'message': message
         })
     
-    # 嗅探功能相关数据包
-    @staticmethod
-    def sniffing():
-        return C2SPackageHelper.create_package('sniffing')
-    
-    @staticmethod
-    def sniffing_completed(result):
-        return C2SPackageHelper.create_package('sniffing_completed', {
-            'result': result
-        })
-    
-    # 爬虫规则相关数据包
-    @staticmethod
-    def saving_crawler_rule():
-        return C2SPackageHelper.create_package('saving_crawler_rule')
-    
-    @staticmethod
-    def crawler_rule_saved(rule_id):
-        return C2SPackageHelper.create_package('crawler_rule_saved', {
-            'rule_id': rule_id
-        })
-    
-    @staticmethod
-    def reading_crawler_rules():
-        return C2SPackageHelper.create_package('reading_crawler_rules')
-    
-    @staticmethod
-    def crawler_rules_read_completed(rules):
-        return C2SPackageHelper.create_package('crawler_rules_read_completed', {
-            'rules': rules
-        })

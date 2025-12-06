@@ -8,10 +8,7 @@ const AppState = {
     itemsPerPage: 18, // 6行 × 3列
     selectedItems: new Set(),
     dataRecords: [],
-    searchSources: [],
-    crawlerRules: [],
-    sniffingInProgress: false,
-    sniffingResult: null
+    searchSources: []
 };
 
 // 页面加载完成后执行
@@ -52,9 +49,6 @@ function initializeApp() {
         
         // 刷新搜索源管理页面
         refreshSearchSourceManagementPage();
-        
-        // 刷新爬虫规则管理页面
-        refreshCrawlerRuleManagementPage();
     });
 }
 
@@ -82,49 +76,24 @@ function registerWebSocketCallbacks() {
         showStatusMessage(data.message, 'error');
     });
     
-    // 处理网页嗅探响应
-    WebSocketClient.on('sniffing', function(data) {
-        if (data.status === 'sniffing') {
-            showStatusMessage('正在嗅探网页内容...', 'info');
-            AppState.sniffingInProgress = true;
-            document.getElementById('start-sniff-button').disabled = true;
-        } else if (data.status === 'completed') {
-            showStatusMessage('网页嗅探完成', 'success');
-            AppState.sniffingInProgress = false;
-            AppState.sniffingResult = data.result;
-            document.getElementById('start-sniff-button').disabled = false;
-            displaySniffingResult();
-        } else if (data.status === 'failed') {
-            showStatusMessage('网页嗅探失败：' + data.message, 'error');
-            AppState.sniffingInProgress = false;
-            document.getElementById('start-sniff-button').disabled = false;
-        }
-    });
-    
-    // 处理保存爬虫规则响应
-    WebSocketClient.on('crawler_rule_saved', function(data) {
+    // 处理嗅探规则响应
+    WebSocketClient.on('sniff_rules_response', function(data) {
         if (data.success) {
-            showStatusMessage('爬虫规则保存成功', 'success');
-            // 清空嗅探结果
-            AppState.sniffingResult = null;
-            document.getElementById('sniff-url-input').value = '';
-            document.getElementById('source-id-input').value = '';
-            document.getElementById('source-name-input').value = '';
-            document.getElementById('sniffing-result').innerHTML = '';
-            // 刷新规则列表
-            refreshCrawlerRuleManagementPage();
+            console.log('嗅探规则成功:', data.data);
+            showStatusMessage('规则嗅探成功', 'success');
+            
+            // 可以在这里更新界面显示，比如显示提取到的XPath
+            const rules = data.data.rules;
+            console.log('提取到的标题XPath:', rules.title_xpath);
+            console.log('提取到的内容XPath:', rules.content_xpath);
+            console.log('提取到的图片XPath:', rules.image_xpath);
+            console.log('提取到的请求头:', rules.request_headers);
+            
+            // 刷新数据管理页面，更新显示的规则
+            refreshDataManagementPage();
         } else {
-            showStatusMessage('爬虫规则保存失败：' + data.message, 'error');
-        }
-    });
-    
-    // 处理爬虫规则读取响应
-    WebSocketClient.on('crawler_rules_read_completed', function(data) {
-        if (data.success) {
-            AppState.crawlerRules = data.rules;
-            displayCrawlerRules();
-        } else {
-            showStatusMessage('读取爬虫规则失败：' + data.message, 'error');
+            console.error('嗅探规则失败:', data.message);
+            showStatusMessage('规则嗅探失败：' + data.message, 'error');
         }
     });
     
@@ -267,8 +236,7 @@ function initializePageElements() {
     // 初始化个人资料页面元素
     initializeProfilePage();
     
-    // 初始化爬虫规则管理页面元素
-    initializeCrawlerRuleManagementPage();
+
     
     // 初始化模态框
     initializeModal();
@@ -531,203 +499,7 @@ function initializeProfilePage() {
     });
 }
 
-// 初始化爬虫规则管理页面
-function initializeCrawlerRuleManagementPage() {
-    // 获取页面元素
-    const startSniffButton = document.getElementById('start-sniff-button');
-    const saveRuleButton = document.getElementById('save-rule-button');
-    const refreshRulesButton = document.getElementById('refresh-rules-button');
-    
-    // 添加事件监听
-    if (startSniffButton) {
-        startSniffButton.addEventListener('click', handleStartSniffing);
-    }
-    
-    if (saveRuleButton) {
-        saveRuleButton.addEventListener('click', handleSaveRule);
-    }
-    
-    if (refreshRulesButton) {
-        refreshRulesButton.addEventListener('click', refreshCrawlerRuleManagementPage);
-    }
-}
 
-// 处理开始嗅探按钮点击
-function handleStartSniffing() {
-    const urlInput = document.getElementById('sniff-url-input');
-    const sourceIdInput = document.getElementById('source-id-input');
-    const sourceNameInput = document.getElementById('source-name-input');
-    
-    const url = urlInput.value.trim();
-    const sourceId = sourceIdInput.value.trim();
-    const sourceName = sourceNameInput.value.trim();
-    
-    if (!url) {
-        showStatusMessage('请输入要嗅探的网页URL', 'warning');
-        return;
-    }
-    
-    if (!sourceId) {
-        showStatusMessage('请输入源ID', 'warning');
-        return;
-    }
-    
-    if (!sourceName) {
-        showStatusMessage('请输入源名称', 'warning');
-        return;
-    }
-    
-    // 发送嗅探请求
-    WebSocketClient.sendSniffRequest(url, sourceId, sourceName);
-}
-
-// 处理保存规则按钮点击
-function handleSaveRule() {
-    if (!AppState.sniffingResult) {
-        showStatusMessage('请先完成网页嗅探', 'warning');
-        return;
-    }
-    
-    const urlInput = document.getElementById('sniff-url-input');
-    const sourceIdInput = document.getElementById('source-id-input');
-    const sourceNameInput = document.getElementById('source-name-input');
-    
-    const url = urlInput.value.trim();
-    const sourceId = sourceIdInput.value.trim();
-    const sourceName = sourceNameInput.value.trim();
-    
-    // 发送保存规则请求
-    WebSocketClient.sendSaveCrawlerRuleRequest({
-        source_id: sourceId,
-        source_name: sourceName,
-        url: url,
-        title_xpath: AppState.sniffingResult.title_xpath,
-        content_xpath: AppState.sniffingResult.content_xpath,
-        image_xpath: AppState.sniffingResult.image_xpath,
-        url_xpath: AppState.sniffingResult.url_xpath,
-        request_headers: AppState.sniffingResult.request_headers
-    });
-}
-
-// 刷新爬虫规则管理页面
-function refreshCrawlerRuleManagementPage() {
-    WebSocketClient.sendRefreshCrawlerRulesRequest();
-}
-
-// 显示嗅探结果
-function displaySniffingResult() {
-    const resultElement = document.getElementById('sniffing-result');
-    if (!resultElement || !AppState.sniffingResult) {
-        return;
-    }
-    
-    const result = AppState.sniffingResult;
-    let html = `
-        <h3>嗅探结果</h3>
-        <div class="sniffing-result-section">
-            <h4>标题 XPath:</h4>
-            <code>${result.title_xpath || '未找到'}</code>
-        </div>
-        <div class="sniffing-result-section">
-            <h4>内容 XPath:</h4>
-            <code>${result.content_xpath || '未找到'}</code>
-        </div>
-        <div class="sniffing-result-section">
-            <h4>图片 XPath:</h4>
-            <code>${result.image_xpath || '未找到'}</code>
-        </div>
-        <div class="sniffing-result-section">
-            <h4>链接 XPath:</h4>
-            <code>${result.url_xpath || '未找到'}</code>
-        </div>
-        <div class="sniffing-result-section">
-            <h4>请求头:</h4>
-            <pre>${JSON.stringify(result.request_headers, null, 2)}</pre>
-        </div>
-    `;
-    
-    resultElement.innerHTML = html;
-    
-    // 显示保存规则按钮
-    document.getElementById('save-rule-button').style.display = 'block';
-}
-
-// 显示爬虫规则列表
-function displayCrawlerRules() {
-    const rulesListElement = document.getElementById('crawler-rules-list');
-    if (!rulesListElement) {
-        return;
-    }
-    
-    if (AppState.crawlerRules.length === 0) {
-        rulesListElement.innerHTML = '<p>暂无爬虫规则</p>';
-        return;
-    }
-    
-    let html = `
-        <table class="rules-table">
-            <thead>
-                <tr>
-                    <th>源ID</th>
-                    <th>源名称</th>
-                    <th>标题XPath</th>
-                    <th>内容XPath</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    
-    AppState.crawlerRules.forEach(rule => {
-        const statusClass = rule.is_enabled ? 'status-active' : 'status-inactive';
-        const statusText = rule.is_enabled ? '启用' : '禁用';
-        
-        html += `
-            <tr>
-                <td>${rule.source_id}</td>
-                <td>${rule.source_name}</td>
-                <td><code>${rule.title_xpath || '无'}</code></td>
-                <td><code>${rule.content_xpath || '无'}</code></td>
-                <td><span class="status-indicator ${statusClass}">${statusText}</span></td>
-                <td>
-                    <button class="btn btn-small ${statusClass}" onclick="toggleCrawlerRule('${rule.id}')">
-                        ${statusText === '启用' ? '禁用' : '启用'}
-                    </button>
-                    <button class="btn btn-small btn-danger" onclick="deleteCrawlerRule('${rule.id}')">
-                        删除
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
-    
-    html += `
-            </tbody>
-        </table>
-    `;
-    
-    rulesListElement.innerHTML = html;
-}
-
-// 切换爬虫规则状态
-function toggleCrawlerRule(ruleId) {
-    const rule = AppState.crawlerRules.find(r => r.id === ruleId);
-    if (rule) {
-        if (rule.is_enabled) {
-            WebSocketClient.sendDisableCrawlerRuleRequest(ruleId);
-        } else {
-            WebSocketClient.sendEnableCrawlerRuleRequest(ruleId);
-        }
-    }
-}
-
-// 删除爬虫规则
-function deleteCrawlerRule(ruleId) {
-    if (confirm('确定要删除此爬虫规则吗？')) {
-        WebSocketClient.sendDeleteCrawlerRuleRequest(ruleId);
-    }
-}
 
 // 初始化模态框
 function initializeModal() {
@@ -969,11 +741,33 @@ function displayDataRecords() {
         return;
     }
     
-    // 生成数据项
-    AppState.dataRecords.forEach(record => {
-        const dataItem = createDataItem(record);
-        dataListContainer.appendChild(dataItem);
+    // 创建表格
+    const table = document.createElement('table');
+    table.className = 'data-table';
+    
+    // 创建表头
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    
+    const headers = ['ID', '标题', '规则', '域名', '采集时间', '操作'];
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
     });
+    
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // 创建表体
+    const tbody = document.createElement('tbody');
+    AppState.dataRecords.forEach(record => {
+        const row = createDataTableRow(record);
+        tbody.appendChild(row);
+    });
+    
+    table.appendChild(tbody);
+    dataListContainer.appendChild(table);
 }
 
 // 从URL中提取域名
@@ -987,73 +781,152 @@ function extractDomain(url) {
     }
 }
 
+// 格式化时间
+function formatTime(timestamp) {
+    if (!timestamp) return '未知';
+    
+    try {
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) return '未知';
+        
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    } catch (error) {
+        return '未知';
+    }
+}
+
 // 创建数据项
-function createDataItem(record) {
-    const item = document.createElement('div');
-    item.className = 'data-item';
-    item.dataset.id = record.id;
+function createDataTableRow(record) {
+    const row = document.createElement('tr');
+    row.dataset.id = record.id;
     
     // 检查是否已选择该数据
     if (AppState.selectedItems.has(record.id)) {
-        item.style.borderColor = '#00d2ff';
-        item.style.borderWidth = '2px';
+        row.className = 'selected';
     }
-    
-    // 添加点击事件（切换选择状态）
-    item.addEventListener('click', function() {
-        if (AppState.selectedItems.has(record.id)) {
-            AppState.selectedItems.delete(record.id);
-            item.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            item.style.borderWidth = '1px';
-        } else {
-            AppState.selectedItems.add(record.id);
-            item.style.borderColor = '#00d2ff';
-            item.style.borderWidth = '2px';
-        }
-    });
-    
-    // 添加双击事件（显示数据卡片详情）
-    item.addEventListener('dblclick', function() {
-        showDataCardDetail(record);
-    });
     
     // 提取域名
     const domain = extractDomain(record.source_url);
     
-    // 模拟采集和嗅探规则（实际应用中应从数据库获取）
-    const collectRule = '默认采集规则';
-    const sniffRule = '默认嗅探规则';
+    // 创建单元格
+    // 主标题ID（包含选择复选框）
+    const idCell = document.createElement('td');
+    idCell.style.position = 'relative';
+    idCell.style.paddingLeft = '25px';
+    idCell.textContent = record.id;
     
-    // 数据项内容 - 使用表格布局确保各部分宽度固定
-    item.innerHTML = `
-        <div class="data-item-header">
-            <h3>${record.title}</h3>
-            ${domain ? `<p class="domain">域名: ${domain}</p>` : ''}
-        </div>
-        <div class="data-item-content">
-            <div class="data-rules">
-                <div class="rule-item">
-                    <span class="rule-label">采集规则:</span>
-                    <span class="rule-value">${collectRule}</span>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">嗅探规则:</span>
-                    <span class="rule-value">${sniffRule}</span>
-                </div>
-            </div>
-        </div>
-        <div class="data-item-footer">
-            <div class="data-meta">
-                <span>来源: ${record.data_source} | 采集时间: ${record.collection_time}</span>
-            </div>
-            <div class="data-actions">
-                <button class="action-btn collect-btn" onclick="collectData('${record.id}')">采集</button>
-                <button class="action-btn sniff-btn" onclick="sniffData('${record.id}')">嗅探</button>
-            </div>
-        </div>
-    `;
+    // 选择复选框（定位在单元格左上角）
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'data-checkbox';
+    checkbox.checked = AppState.selectedItems.has(record.id);
+    checkbox.style.position = 'absolute';
+    checkbox.style.left = '5px';
+    checkbox.style.top = '50%';
+    checkbox.style.transform = 'translateY(-50%) scale(0.9)';
+    checkbox.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (this.checked) {
+            AppState.selectedItems.add(record.id);
+            row.className = 'selected';
+        } else {
+            AppState.selectedItems.delete(record.id);
+            row.className = '';
+        }
+    });
+    idCell.appendChild(checkbox);
     
-    return item;
+    // 标题
+    const titleCell = document.createElement('td');
+    titleCell.innerHTML = `<div style="display: flex; flex-direction: column;">
+        <a href="${record.source_url}" target="_blank" style="color: #00d2ff; text-decoration: underline; margin-bottom: 2px;">${record.title}</a>
+        <span style="font-size: 10px; color: #666;">${domain}</span>
+    </div>`;
+    
+    // 采集和嗅探规则
+    const rulesCell = document.createElement('td');
+    // 假设规则信息存储在record的相应字段中，如果没有则显示默认信息
+    rulesCell.textContent = (record.collect_rule || '无规则') + ' / ' + (record.sniff_rule || '无规则');
+    rulesCell.style.whiteSpace = 'nowrap';
+    rulesCell.style.overflow = 'hidden';
+    rulesCell.style.textOverflow = 'ellipsis';
+    rulesCell.style.maxWidth = '120px';
+    
+
+    
+    // 域名
+    const domainCell = document.createElement('td');
+    domainCell.textContent = domain || '未知';
+    
+    // 数据源（已隐藏）
+    
+    // 采集时间
+    const timeCell = document.createElement('td');
+    timeCell.textContent = formatTime(record.created_at);
+    
+    // 操作
+    const actionCell = document.createElement('td');
+    
+    // 查看按钮
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'action-btn view-btn';
+    viewBtn.textContent = '查看';
+    viewBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // 跳转到源网页
+        window.open(record.source_url, '_blank');
+    });
+    
+    // 采集按钮
+    const collectBtn = document.createElement('button');
+    collectBtn.className = 'action-btn collect-btn';
+    collectBtn.textContent = '采集';
+    collectBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        collectData(record.id);
+    });
+    
+    // 嗅探按钮
+    const sniffBtn = document.createElement('button');
+    sniffBtn.className = 'action-btn sniff-btn';
+    sniffBtn.textContent = '嗅探';
+    sniffBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        sniffData(record.id);
+    });
+    
+    actionCell.appendChild(viewBtn);
+    actionCell.appendChild(collectBtn);
+    actionCell.appendChild(sniffBtn);
+    
+    // 整行点击事件（切换选择状态）
+    row.addEventListener('click', function() {
+        const checkbox = this.querySelector('.data-checkbox');
+        checkbox.checked = !checkbox.checked;
+        
+        if (checkbox.checked) {
+            AppState.selectedItems.add(record.id);
+            row.className = 'selected';
+        } else {
+            AppState.selectedItems.delete(record.id);
+            row.className = '';
+        }
+    });
+    
+    // 组装行
+    const cells = [idCell, titleCell, rulesCell, domainCell, timeCell, actionCell];
+    cells.forEach(cell => {
+        row.appendChild(cell);
+    });
+    
+    return row;
 }
 
 // 采集功能（待实现）
@@ -1063,26 +936,57 @@ function collectData(recordId) {
     showStatusMessage('采集功能将在后续版本实现', 'info');
 }
 
-// 嗅探功能（待实现）
+// 嗅探功能实现
 function sniffData(recordId) {
-    console.log('嗅探数据:', recordId);
+    console.log('开始嗅探数据:', recordId);
+    
+    // 查找对应的记录
+    const record = AppState.dataRecords.find(item => item.id === recordId);
+    if (!record) {
+        showStatusMessage('未找到指定的数据记录', 'error');
+        return;
+    }
+    
+    // 检查是否有source_url
+    if (!record.source_url) {
+        showStatusMessage('该记录没有源URL，无法进行嗅探', 'error');
+        return;
+    }
+    
     // 显示提示信息
-    showStatusMessage('嗅探功能将在后续版本实现', 'info');
+    showStatusMessage('正在进行规则嗅探...', 'info');
+    
+    // 发送嗅探请求到服务器
+    WebSocketClient.send('sniff_rules', {
+        source_url: record.source_url,
+        target_title: record.title
+    });
 }
+
+
 
 // 更新数据项选择状态
 function updateDataItemSelections() {
-    const dataItems = document.querySelectorAll('.data-item');
+    const dataRows = document.querySelectorAll('.data-table tbody tr');
+    const checkboxes = document.querySelectorAll('.data-checkbox');
     
-    dataItems.forEach(item => {
-        const id = item.dataset.id;
+    dataRows.forEach(row => {
+        const id = row.dataset.id;
         
         if (AppState.selectedItems.has(id)) {
-            item.style.borderColor = '#00d2ff';
-            item.style.borderWidth = '2px';
+            row.className = 'selected';
+            // 更新复选框状态
+            const checkbox = row.querySelector('.data-checkbox');
+            if (checkbox) {
+                checkbox.checked = true;
+            }
         } else {
-            item.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            item.style.borderWidth = '1px';
+            row.className = '';
+            // 更新复选框状态
+            const checkbox = row.querySelector('.data-checkbox');
+            if (checkbox) {
+                checkbox.checked = false;
+            }
         }
     });
 }
@@ -1238,8 +1142,7 @@ function showStatusMessage(message, type = 'info') {
         statusElement = document.getElementById('data-management-status');
     } else if (activePage.id === 'search-source-management') {
         statusElement = document.getElementById('search-source-status');
-    } else if (activePage.id === 'crawler-rule-management') {
-        statusElement = document.getElementById('crawler-rule-status');
+
     }
     
     if (!statusElement) return;

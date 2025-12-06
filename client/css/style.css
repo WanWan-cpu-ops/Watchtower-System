@@ -508,35 +508,7 @@ body {
     overflow: hidden;
 }
 
-.data-rules {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    height: 100%;
-}
 
-.rule-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 3px;
-}
-
-.rule-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #555;
-    width: 70px;
-    flex-shrink: 0;
-}
-
-.rule-value {
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.7);
-    flex-grow: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 /* 数据项底部样式 */
 .data-item-footer {
@@ -569,7 +541,7 @@ body {
     display: flex;
     gap: 8px;
     flex-shrink: 0;
-    min-width: 120px;
+    min-width: 180px;
 }
 
 .data-actions .action-btn {
@@ -596,13 +568,15 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-.data-actions .sniff-btn {
-    background-color: #2196F3;
+
+
+.data-actions .view-btn {
+    background-color: #ff9800;
     color: white;
 }
 
-.data-actions .sniff-btn:hover {
-    background-color: #0b7dda;
+.data-actions .view-btn:hover {
+    background-color: #e68900;
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
@@ -829,216 +803,170 @@ body {
     }
 }
 
-/* 爬虫规则管理页面样式 */
-#crawler-rule-management {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.sniffing-section,
-.rules-section {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(31, 38, 135, 0.15);
-    border: 1px solid rgba(100, 100, 100, 0.2);
-}
-
-.section-title {
-    font-size: 20px;
-    margin-bottom: 20px;
-    color: #fff;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 10px;
-}
-
-.sniffing-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.control-group label {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 5px;
-}
-
-.control-group input {
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 14px;
-}
-
-.control-group input:focus {
-    outline: none;
-    border-color: #00d2ff;
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-#save-rule-button {
-    display: none;
-}
-
-#sniffing-result {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
-    padding: 15px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.sniffing-result-section {
-    margin-bottom: 15px;
-}
-
-.sniffing-result-section h4 {
-    font-size: 16px;
-    color: #00d2ff;
-    margin-bottom: 5px;
-}
-
-.sniffing-result-section code {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 3px 5px;
-    border-radius: 3px;
-    color: #fff;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    word-break: break-all;
-}
-
-.sniffing-result-section pre {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 5px;
-    color: #fff;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 13px;
-    max-height: 150px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-}
-
-.rules-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.rules-list {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
-    padding: 15px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.rules-table {
+/* 数据管理页面 - 表格样式 */
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    color: #fff;
+    margin: 20px 0;
+    color: #ffffff;
+    font-size: 14px;
+    table-layout: fixed;
 }
 
-.rules-table th, .rules-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.data-table th, .data-table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: #ffffff;
+    color: #000000;
+    transition: background-color 0.2s ease;
 }
 
-.rules-table th {
-    background: rgba(255, 255, 255, 0.1);
-    font-weight: 500;
-    color: #00d2ff;
+.data-table th {
+    background-color: rgba(0, 100, 255, 0.2);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    color: #000000;
+    text-align: center;
 }
 
-.rules-table td code {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
-    word-break: break-all;
+.data-table tr {
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
 }
 
-.status-indicator {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 500;
+.data-table tr:hover {
+    background-color: rgba(0, 100, 255, 0.1);
 }
 
-.status-active {
-    background: rgba(76, 175, 80, 0.3);
-    color: #4caf50;
+.data-table tr:hover td {
+    background-color: rgba(0, 100, 255, 0.05);
 }
 
-.status-inactive {
-    background: rgba(244, 67, 54, 0.3);
-    color: #f44336;
+.data-table tr.selected {
+    background-color: rgba(0, 210, 255, 0.2);
+    border: 2px solid #00d2ff;
 }
 
-.btn-small {
-    padding: 5px 10px;
-    font-size: 12px;
+.data-table td:nth-child(1) {
+    width: 80px;
+}
+
+.data-table td:nth-child(2) {
+    width: 250px;
+}
+
+.data-table td:nth-child(3) {
+    width: 150px;
+}
+
+.data-table td:nth-child(4) {
+    width: 60px;
+}
+
+.data-table td:nth-child(5) {
+    width: 150px;
+}
+
+.data-table td:nth-child(6) {
+    width: 150px;
+    text-align: center;
+}
+
+.data-checkbox {
     cursor: pointer;
+    transform: scale(1.2);
+}
+
+/* 数据表格操作按钮样式 */
+.data-table .action-btn {
+    padding: 4px 8px;
+    margin-right: 8px;
     border: none;
     border-radius: 3px;
-    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    min-width: 45px;
+    text-align: center;
+    white-space: nowrap;
 }
 
-.btn-danger {
-    background: rgba(244, 67, 54, 0.7);
-    color: #fff;
+.data-table .view-btn {
+    background-color: #ff9800;
+    color: white;
 }
 
-.btn-danger:hover {
-    background: rgba(244, 67, 54, 0.9);
+.data-table .view-btn:hover {
+    background-color: #e68900;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-/* 响应式设计 - 爬虫规则管理页面 */
-@media (max-width: 768px) {
-    .action-buttons {
-        flex-direction: column;
-    }
-    
-    .rules-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .rules-table {
+.data-table .collect-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.data-table .collect-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.data-table .sniff-btn {
+    background-color: #2196F3;
+    color: white;
+    margin-right: 0;
+}
+
+.data-table .sniff-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* 响应式表格 */
+@media screen and (max-width: 1200px) {
+    .data-table {
         font-size: 12px;
     }
     
-    .rules-table th, .rules-table td {
+    .data-table th, .data-table td {
+        padding: 8px;
+    }
+    
+    .data-table td:nth-child(2) {
+        width: 200px;
+    }
+    
+    .data-table td:nth-child(3) {
+        width: 120px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .data-table {
+        font-size: 11px;
+    }
+    
+    .data-table th,
+    .data-table td {
         padding: 5px;
     }
     
-    .rules-table th:nth-child(3), .rules-table td:nth-child(3),
-    .rules-table th:nth-child(4), .rules-table td:nth-child(4) {
-        display: none;
+    .data-table td:nth-child(3) {
+        width: 100px;
+    }
+    .data-table td:nth-child(4) {
+        width: 50px;
     }
 }
+

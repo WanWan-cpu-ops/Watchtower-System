@@ -45,6 +45,21 @@ CREATE TABLE IF NOT EXISTS search_sources (
 )
 ''')
 
+# 创建爬虫规则表
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS spider_rules (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_url TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    title_xpath TEXT,
+    content_xpath TEXT,
+    image_xpath TEXT,
+    request_headers TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(source_url)
+)''')
+
 # 保存更改并关闭连接
 conn.commit()
 conn.close()

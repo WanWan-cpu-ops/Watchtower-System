@@ -7,7 +7,7 @@ const WebSocketClient = {
     reconnectTimer: null, // 重连定时器
     
     // 连接到WebSocket服务器
-    connect: function(host = 'ws://localhost:8000') {
+    connect: function(host = 'ws://localhost:8080') {
         console.log('客户端尝试连接WebSocket服务器:', host);
         try {
             this.socket = new WebSocket(host);
@@ -134,69 +134,7 @@ const WebSocketClient = {
         delete this.callbacks[event];
     },
     
-    // 发送网页嗅探请求
-    sendSniffRequest: function(url, sourceId, sourceName) {
-        const message = {
-            type: 'sniff_webpage',
-            data: {
-                url: url,
-                source_id: sourceId,
-                source_name: sourceName
-            }
-        };
-        this.send(message);
-    },
-    
-    // 发送保存爬虫规则请求
-    sendSaveCrawlerRuleRequest: function(ruleData) {
-        const message = {
-            type: 'save_crawler_rule',
-            data: ruleData
-        };
-        this.send(message);
-    },
-    
-    // 发送刷新爬虫规则请求
-    sendRefreshCrawlerRulesRequest: function() {
-        const message = {
-            type: 'refresh_crawler_rules',
-            data: {}
-        };
-        this.send(message);
-    },
-    
-    // 发送启用爬虫规则请求
-    sendEnableCrawlerRuleRequest: function(ruleId) {
-        const message = {
-            type: 'enable_crawler_rule',
-            data: {
-                id: ruleId
-            }
-        };
-        this.send(message);
-    },
-    
-    // 发送禁用爬虫规则请求
-    sendDisableCrawlerRuleRequest: function(ruleId) {
-        const message = {
-            type: 'disable_crawler_rule',
-            data: {
-                id: ruleId
-            }
-        };
-        this.send(message);
-    },
-    
-    // 发送删除爬虫规则请求
-    sendDeleteCrawlerRuleRequest: function(ruleId) {
-        const message = {
-            type: 'delete_crawler_rule',
-            data: {
-                id: ruleId
-            }
-        };
-        this.send(message);
-    }
+
 };
 
 // 导出WebSocketClient模块

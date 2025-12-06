@@ -678,3 +678,260 @@
 2025-12-06 15:37:29,957 - INFO - 成功提取并去重 4 条搜索结果
 2025-12-06 15:37:29,958 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
 2025-12-06 15:39:45,501 - INFO - connection closed
+2025-12-06 22:00:18,189 - INFO - 原始关键词: 绣叹, 编码后: %E7%BB%A3%E5%8F%B9
+2025-12-06 22:00:18,191 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E7%BB%A3%E5%8F%B9&pn=0
+2025-12-06 22:00:19,570 - INFO - 请求成功，状态码: 200
+2025-12-06 22:00:19,571 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E7%BB%A3%E5%8F%B9&pn=0
+2025-12-06 22:00:19,573 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_绣叹_1.json'
+2025-12-06 22:00:19,617 - INFO - 找到 7 个搜索结果项
+2025-12-06 22:00:19,620 - INFO - 提取概要: 《绣妇叹》— 白居易笔下的哀怨与期盼...
+2025-12-06 22:00:19,622 - INFO - 提取概要: 绣妇叹原文|翻译|赏析_白居易古诗_古文岛_原古诗文网...
+2025-12-06 22:00:19,623 - INFO - 提取概要: 绣妇叹_诗词_百度汉语...
+2025-12-06 22:00:19,625 - INFO - 提取概要: 绣妇叹:白居易笔下的女性哀歌...
+2025-12-06 22:00:19,626 - INFO - 提取概要: 《绣妇叹》原文注释译文_翻译及赏析_拼音版_朗读-白居易的古诗词......
+2025-12-06 22:00:19,628 - INFO - 提取概要: 绣妇叹(白居易)_汉程汉语...
+2025-12-06 22:00:19,633 - INFO - 提取概要: 诗词 白居易 绣妇叹绣妇叹 唐· 白居易 七言律诗 连枝花样绣罗襦,本拟新年饷小姑。 自觉逢春饶怅望...
+2025-12-06 22:00:19,633 - INFO - 成功提取并去重 7 条搜索结果
+2025-12-06 22:00:19,634 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_绣叹.json'
+2025-12-06 22:21:15,152 - INFO - server listening on [::1]:8080
+2025-12-06 22:21:15,153 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 22:21:19,084 - INFO - connection open
+2025-12-06 22:31:07,087 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 22:31:07,088 - INFO - server listening on [::1]:8080
+2025-12-06 22:31:55,463 - INFO - connection open
+2025-12-06 22:32:08,539 - INFO - connection open
+2025-12-06 22:32:18,292 - INFO - 原始关键词: 成都, 编码后: %E6%88%90%E9%83%BD
+2025-12-06 22:32:18,292 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 22:32:20,212 - INFO - 请求成功，状态码: 200
+2025-12-06 22:32:20,212 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E6%88%90%E9%83%BD&pn=0
+2025-12-06 22:32:20,214 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_成都_1.json'
+2025-12-06 22:32:20,260 - INFO - 找到 5 个搜索结果项
+2025-12-06 22:32:20,266 - INFO - 提取概要: 成都市人民政府习近平同法国总统马克龙在成都非正式会晤 习近平同法国总统马克龙举行会谈共同会见记者 |...
+2025-12-06 22:32:20,267 - INFO - 提取概要: 【成都天气预报15天_成都天气预报15天查询】-中国天气网...
+2025-12-06 22:32:20,268 - INFO - 提取概要: 第一次来成都,妹子被这城建震撼到了,和广州比谁更胜一筹?_哔哩......
+2025-12-06 22:32:20,275 - INFO - 提取概要: 四川省成都市简介2025年5月17日成都市，简称“蓉”，别称“锦城”，是四川省省会，国家中心城市，中...
+2025-12-06 22:32:20,277 - INFO - 提取概要: 🌆成都区域划分新知 🌆...
+2025-12-06 22:32:20,277 - INFO - 成功提取并去重 5 条搜索结果
+2025-12-06 22:32:20,278 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_成都.json'
+2025-12-06 22:33:38,456 - INFO - connection open
+2025-12-06 22:33:47,616 - INFO - server listening on [::1]:8080
+2025-12-06 22:33:47,617 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 22:33:51,596 - INFO - connection open
+2025-12-06 22:34:16,508 - INFO - connection open
+2025-12-06 22:37:27,365 - INFO - server listening on [::1]:8080
+2025-12-06 22:37:27,366 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 22:37:31,309 - INFO - connection open
+2025-12-06 22:42:11,939 - INFO - connection open
+2025-12-06 22:42:20,794 - INFO - connection open
+2025-12-06 22:44:18,133 - INFO - connection open
+2025-12-06 22:45:39,826 - INFO - connection open
+2025-12-06 22:51:52,438 - INFO - connection open
+2025-12-06 23:00:55,128 - INFO - connection open
+2025-12-06 23:01:07,475 - INFO - connection open
+2025-12-06 23:01:10,948 - INFO - connection open
+2025-12-06 23:01:19,791 - INFO - connection open
+2025-12-06 23:01:51,251 - INFO - connection open
+2025-12-06 23:01:59,778 - INFO - connection open
+2025-12-06 23:05:02,957 - INFO - connection open
+2025-12-06 23:08:56,049 - INFO - connection open
+2025-12-06 23:10:24,352 - INFO - connection open
+2025-12-06 23:11:16,733 - INFO - connection open
+2025-12-06 23:11:35,118 - INFO - connection open
+2025-12-06 23:11:44,755 - INFO - connection open
+2025-12-06 23:12:05,598 - INFO - connection open
+2025-12-06 23:12:23,607 - INFO - connection open
+2025-12-06 23:12:32,461 - INFO - connection open
+2025-12-06 23:15:37,192 - INFO - connection open
+2025-12-06 23:17:16,101 - INFO - connection open
+2025-12-06 23:17:45,797 - INFO - connection open
+2025-12-06 23:17:56,555 - INFO - connection open
+2025-12-06 23:20:25,224 - INFO - connection open
+2025-12-06 23:20:34,895 - INFO - connection open
+2025-12-06 23:26:58,527 - INFO - connection open
+2025-12-06 23:27:09,827 - INFO - connection open
+2025-12-06 23:28:52,524 - INFO - server listening on [::1]:8080
+2025-12-06 23:28:52,525 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:28:52,681 - INFO - connection open
+2025-12-06 23:28:53,147 - INFO - connection open
+2025-12-06 23:28:55,147 - INFO - connection open
+2025-12-06 23:30:39,570 - INFO - connection open
+2025-12-06 23:33:37,036 - INFO - server listening on [::1]:8080
+2025-12-06 23:33:37,036 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:33:38,558 - INFO - connection open
+2025-12-06 23:33:40,153 - INFO - connection open
+2025-12-06 23:33:42,157 - INFO - connection open
+2025-12-06 23:34:13,886 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:34:13,887 - INFO - server listening on [::1]:8080
+2025-12-06 23:34:14,020 - INFO - connection open
+2025-12-06 23:34:17,705 - INFO - connection open
+2025-12-06 23:34:19,151 - INFO - connection open
+2025-12-06 23:46:51,713 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:46:51,714 - INFO - server listening on [::1]:8080
+2025-12-06 23:46:52,025 - INFO - connection open
+2025-12-06 23:46:52,041 - INFO - connection open
+2025-12-06 23:46:56,789 - INFO - connection open
+2025-12-06 23:47:15,431 - INFO - connection open
+2025-12-06 23:47:37,589 - INFO - connection open
+2025-12-06 23:47:47,719 - INFO - connection open
+2025-12-06 23:49:17,805 - INFO - connection open
+2025-12-06 23:51:02,520 - INFO - server listening on [::1]:8080
+2025-12-06 23:51:02,520 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:51:02,525 - INFO - connection open
+2025-12-06 23:51:02,617 - INFO - connection open
+2025-12-06 23:51:08,199 - INFO - connection open
+2025-12-06 23:52:31,112 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:52:31,113 - INFO - server listening on [::1]:8080
+2025-12-06 23:52:34,675 - INFO - connection open
+2025-12-06 23:52:34,676 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:34,684 - INFO - connection open
+2025-12-06 23:52:34,685 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:35,165 - INFO - connection open
+2025-12-06 23:52:35,166 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:39,690 - INFO - connection open
+2025-12-06 23:52:39,691 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:39,697 - INFO - connection open
+2025-12-06 23:52:39,698 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:41,149 - INFO - connection open
+2025-12-06 23:52:41,150 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:44,701 - INFO - connection open
+2025-12-06 23:52:44,701 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:44,707 - INFO - connection open
+2025-12-06 23:52:44,708 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:47,161 - INFO - connection open
+2025-12-06 23:52:47,162 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:49,716 - INFO - connection open
+2025-12-06 23:52:49,717 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:49,721 - INFO - connection open
+2025-12-06 23:52:49,722 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:53,161 - INFO - connection open
+2025-12-06 23:52:53,161 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:54,734 - INFO - connection open
+2025-12-06 23:52:54,735 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:54,740 - INFO - connection open
+2025-12-06 23:52:54,741 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:52:59,151 - INFO - connection open
+2025-12-06 23:52:59,152 - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 376, in conn_handler
+    await self.handler(connection)
+          ~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: WebSocketServer.start_server.<locals>.handle_client_with_cors() missing 1 required positional argument: 'path'
+2025-12-06 23:53:02,874 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:53:02,875 - INFO - server listening on [::1]:8080
+2025-12-06 23:53:05,149 - INFO - connection open
+2025-12-06 23:53:07,103 - INFO - connection open
+2025-12-06 23:53:07,118 - INFO - connection open
+2025-12-06 23:53:44,325 - INFO - server listening on 127.0.0.1:8080
+2025-12-06 23:53:44,326 - INFO - server listening on [::1]:8080
+2025-12-06 23:53:45,437 - INFO - connection open
+2025-12-06 23:53:45,440 - INFO - connection open
+2025-12-06 23:53:48,150 - INFO - connection open
+2025-12-06 23:54:47,787 - INFO - connection open
+2025-12-06 23:55:37,092 - INFO - connection open
+2025-12-06 23:55:43,715 - INFO - connection open
+2025-12-06 23:55:53,134 - INFO - connection open
+2025-12-06 23:56:44,006 - INFO - connection rejected (426 Upgrade Required)
+2025-12-06 23:56:44,007 - ERROR - opening handshake failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 356, in conn_handler
+    await connection.handshake(
+    ...<3 lines>...
+    )
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 207, in handshake
+    raise self.protocol.handshake_exc
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\server.py", line 138, in accept
+    ) = self.process_request(request)
+        ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\server.py", line 233, in process_request
+    raise InvalidUpgrade(
+        "Connection", ", ".join(connection) if connection else None
+    )
+websockets.exceptions.InvalidUpgrade: invalid Connection header: keep-alive
+2025-12-06 23:56:44,173 - INFO - connection rejected (426 Upgrade Required)
+2025-12-06 23:56:44,174 - ERROR - opening handshake failed
+Traceback (most recent call last):
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 356, in conn_handler
+    await connection.handshake(
+    ...<3 lines>...
+    )
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\asyncio\server.py", line 207, in handshake
+    raise self.protocol.handshake_exc
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\server.py", line 138, in accept
+    ) = self.process_request(request)
+        ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "E:\Watchtower-System-main\Watchtower-System-main\venv\Lib\site-packages\websockets\server.py", line 233, in process_request
+    raise InvalidUpgrade(
+        "Connection", ", ".join(connection) if connection else None
+    )
+websockets.exceptions.InvalidUpgrade: invalid Connection header: keep-alive
+2025-12-06 23:56:58,552 - INFO - connection open

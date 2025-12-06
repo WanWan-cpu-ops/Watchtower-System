@@ -51,6 +51,7 @@ class Database:
                     image_url TEXT,
                     source_url TEXT NOT NULL,
                     data_source TEXT NOT NULL,
+                    search_term TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ''')
@@ -68,38 +69,22 @@ class Database:
             
             # 创建爬虫规则表
             self.cursor.execute('''
-                CREATE TABLE IF NOT EXISTS crawler_rules (
+                CREATE TABLE IF NOT EXISTS spider_rules (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    source_id TEXT NOT NULL,
-                    source_name TEXT NOT NULL,
-                    title_xpath TEXT NOT NULL,
-                    content_xpath TEXT NOT NULL,
+                    source_url TEXT NOT NULL,
+                    domain TEXT NOT NULL,
+                    title_xpath TEXT,
+                    content_xpath TEXT,
                     image_xpath TEXT,
-                    url_xpath TEXT,
-                    request_headers TEXT NOT NULL,
+                    request_headers TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    enabled INTEGER NOT NULL DEFAULT 1
+                    UNIQUE(source_url)
                 )
             ''')
             self.log(f"爬虫规则表检查/创建完成", 'DEBUG')
             
-            # 创建详细爬虫规则表
-            self.cursor.execute('''
-                CREATE TABLE IF NOT EXISTS crawler_detailed_rules (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    crawler_rule_id INTEGER NOT NULL,
-                    field_name TEXT NOT NULL,
-                    xpath TEXT NOT NULL,
-                    extract_type TEXT DEFAULT 'text',  -- text, html, attribute
-                    attribute_name TEXT,  -- 当extract_type为attribute时使用
-                    is_required INTEGER DEFAULT 0,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (crawler_rule_id) REFERENCES crawler_rules (id) ON DELETE CASCADE
-                )
-            ''')
-            self.log(f"详细爬虫规则表检查/创建完成", 'DEBUG')
+
             
             self.conn.commit()
             self.log(f"数据库表结构提交完成", 'DEBUG')
@@ -149,14 +134,14 @@ class Database:
             return None
     
     # 数据记录相关操作
-    def add_data_record(self, title, summary, image_url, source_url, data_source):
+    def add_data_record(self, title, summary, image_url, source_url, data_source, search_term=None):
         self.log(f"开始添加数据记录: 标题={title}, 数据源={data_source}", 'DEBUG')
         
         try:
             self.cursor.execute('''
-                INSERT INTO data_records (title, summary, image_url, source_url, data_source) 
-                VALUES (?, ?, ?, ?, ?)
-            ''', (title, summary, image_url, source_url, data_source))
+                INSERT INTO data_records (title, summary, image_url, source_url, data_source, search_term) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (title, summary, image_url, source_url, data_source, search_term))
             self.conn.commit()
             
             record_id = self.cursor.lastrowid
@@ -296,298 +281,59 @@ class Database:
             return []
     
     # 爬虫规则相关操作
-    def add_crawler_rule(self, source_id, source_name, title_xpath, content_xpath, image_xpath=None, url_xpath=None, request_headers=None):
-        self.log(f"开始添加爬虫规则: 源ID={source_id}, 源名称={source_name}", 'INFO')
+    def add_spider_rule(self, source_url, domain, title_xpath=None, content_xpath=None, image_xpath=None, request_headers=None):
+        self.log(f"开始添加爬虫规则: 源URL={source_url}, 域名={domain}", 'DEBUG')
         
         try:
-            # 确保request_headers不为None
-            if request_headers is None:
-                request_headers = '{}'
-            
             self.cursor.execute('''
-                INSERT INTO crawler_rules (source_id, source_name, title_xpath, content_xpath, image_xpath, url_xpath, request_headers)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (source_id, source_name, title_xpath, content_xpath, image_xpath, url_xpath, request_headers))
+                INSERT OR REPLACE INTO spider_rules (source_url, domain, title_xpath, content_xpath, image_xpath, request_headers, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ''', (source_url, domain, title_xpath, content_xpath, image_xpath, request_headers))
             self.conn.commit()
             
             rule_id = self.cursor.lastrowid
-            self.log(f"爬虫规则添加成功: 规则ID={rule_id}, 源名称={source_name}", 'INFO')
+            self.log(f"爬虫规则添加/更新成功: 规则ID={rule_id}, 源URL={source_url}", 'DEBUG')
             
             return rule_id
         
         except Exception as e:
-            self.log(f"爬虫规则添加失败: 源名称={source_name} - 错误: {str(e)}", 'ERROR')
+            self.log(f"爬虫规则添加/更新失败: 源URL={source_url} - 错误: {str(e)}", 'ERROR')
             return None
     
-    def get_crawler_rule(self, rule_id):
-        self.log(f"开始查询爬虫规则: 规则ID={rule_id}", 'DEBUG')
+    def get_spider_rule(self, source_url):
+        self.log(f"开始查询爬虫规则: 源URL={source_url}", 'DEBUG')
         
         try:
-            self.cursor.execute('SELECT * FROM crawler_rules WHERE id = ?', (rule_id,))
+            self.cursor.execute('SELECT * FROM spider_rules WHERE source_url = ?', (source_url,))
             rule = self.cursor.fetchone()
             
             if rule:
-                self.log(f"爬虫规则查询成功: 规则ID={rule_id}", 'DEBUG')
+                self.log(f"爬虫规则查询成功: 源URL={source_url}, 规则数据={rule}", 'DEBUG')
             else:
-                self.log(f"爬虫规则查询失败: 规则ID={rule_id} 不存在", 'DEBUG')
+                self.log(f"爬虫规则查询失败: 源URL={source_url} 不存在", 'DEBUG')
             
             return rule
         
         except Exception as e:
-            self.log(f"爬虫规则查询失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
+            self.log(f"爬虫规则查询失败: 源URL={source_url} - 错误: {str(e)}", 'ERROR')
             return None
     
-    def get_crawler_rules(self, source_id=None, enabled=None):
-        query = 'SELECT * FROM crawler_rules WHERE 1=1'
-        params = []
-        
-        if source_id:
-            query += ' AND source_id = ?'
-            params.append(source_id)
-        
-        if enabled is not None:
-            query += ' AND enabled = ?'
-            params.append(1 if enabled else 0)
-        
-        query += ' ORDER BY source_name ASC'
-        
-        self.log(f"开始查询爬虫规则: 源ID={source_id}, 启用状态={enabled}", 'DEBUG')
+    def get_spider_rules_by_domain(self, domain):
+        self.log(f"开始按域名查询爬虫规则: 域名={domain}", 'DEBUG')
         
         try:
-            self.cursor.execute(query, params)
+            self.cursor.execute('SELECT * FROM spider_rules WHERE domain = ? ORDER BY updated_at DESC', (domain,))
             rules = self.cursor.fetchall()
             
-            self.log(f"爬虫规则查询完成: 结果数量={len(rules)}", 'DEBUG')
+            self.log(f"按域名查询爬虫规则完成: 域名={domain}, 结果数量={len(rules)}", 'DEBUG')
             
             return rules
         
         except Exception as e:
-            self.log(f"爬虫规则查询失败: 错误: {str(e)}", 'ERROR')
+            self.log(f"按域名查询爬虫规则失败: 域名={domain} - 错误: {str(e)}", 'ERROR')
             return []
     
-    def get_all_crawler_rules(self):
-        """
-        获取所有爬虫规则
-        
-        返回:
-            list: 包含所有爬虫规则的列表
-        """
-        self.log(f"开始获取所有爬虫规则", 'DEBUG')
-        
-        try:
-            self.cursor.execute('SELECT * FROM crawler_rules ORDER BY source_name ASC')
-            rules = self.cursor.fetchall()
-            
-            self.log(f"所有爬虫规则查询完成: 结果数量={len(rules)}", 'DEBUG')
-            
-            return rules
-        
-        except Exception as e:
-            self.log(f"获取所有爬虫规则失败: 错误: {str(e)}", 'ERROR')
-            return []
-    
-    def update_crawler_rule(self, rule_id, source_id=None, source_name=None, title_xpath=None, content_xpath=None, image_xpath=None, url_xpath=None, request_headers=None):
-        self.log(f"开始更新爬虫规则: 规则ID={rule_id}", 'INFO')
-        
-        try:
-            # 先获取当前规则
-            current_rule = self.get_crawler_rule(rule_id)
-            if not current_rule:
-                return False
-            
-            # 使用当前值作为默认值
-            update_source_id = source_id if source_id is not None else current_rule[1]
-            update_source_name = source_name if source_name is not None else current_rule[2]
-            update_title_xpath = title_xpath if title_xpath is not None else current_rule[3]
-            update_content_xpath = content_xpath if content_xpath is not None else current_rule[4]
-            update_image_xpath = image_xpath if image_xpath is not None else current_rule[5]
-            update_url_xpath = url_xpath if url_xpath is not None else current_rule[6]
-            update_request_headers = request_headers if request_headers is not None else current_rule[7]
-            
-            self.cursor.execute('''
-                UPDATE crawler_rules SET
-                    source_id = ?, source_name = ?, title_xpath = ?, content_xpath = ?, image_xpath = ?, url_xpath = ?, request_headers = ?
-                WHERE id = ?
-            ''', (update_source_id, update_source_name, update_title_xpath, update_content_xpath, update_image_xpath, update_url_xpath, update_request_headers, rule_id))
-            self.conn.commit()
-            
-            self.log(f"爬虫规则更新成功: 规则ID={rule_id}", 'INFO')
-            
-            return True
-        
-        except Exception as e:
-            self.log(f"爬虫规则更新失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    def delete_crawler_rule(self, rule_id):
-        self.log(f"开始删除爬虫规则: 规则ID={rule_id}", 'INFO')
-        
-        try:
-            self.cursor.execute('DELETE FROM crawler_rules WHERE id = ?', (rule_id,))
-            self.conn.commit()
-            
-            if self.cursor.rowcount > 0:
-                self.log(f"爬虫规则删除成功: 规则ID={rule_id}", 'INFO')
-                return True
-            else:
-                self.log(f"爬虫规则删除失败: 规则ID={rule_id} 不存在", 'WARNING')
-                return False
-        
-        except Exception as e:
-            self.log(f"爬虫规则删除失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    def enable_crawler_rule(self, rule_id):
-        self.log(f"开始启用爬虫规则: 规则ID={rule_id}", 'INFO')
-        
-        try:
-            self.cursor.execute('UPDATE crawler_rules SET enabled = 1 WHERE id = ?', (rule_id,))
-            self.conn.commit()
-            
-            if self.cursor.rowcount > 0:
-                self.log(f"爬虫规则启用成功: 规则ID={rule_id}", 'INFO')
-                return True
-            else:
-                self.log(f"爬虫规则启用失败: 规则ID={rule_id} 不存在", 'WARNING')
-                return False
-        
-        except Exception as e:
-            self.log(f"爬虫规则启用失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    def disable_crawler_rule(self, rule_id):
-        self.log(f"开始禁用爬虫规则: 规则ID={rule_id}", 'INFO')
-        
-        try:
-            self.cursor.execute('UPDATE crawler_rules SET enabled = 0 WHERE id = ?', (rule_id,))
-            self.conn.commit()
-            
-            if self.cursor.rowcount > 0:
-                self.log(f"爬虫规则禁用成功: 规则ID={rule_id}", 'INFO')
-                return True
-            else:
-                self.log(f"爬虫规则禁用失败: 规则ID={rule_id} 不存在", 'WARNING')
-                return False
-        
-        except Exception as e:
-            self.log(f"爬虫规则禁用失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    # 详细爬虫规则相关操作
-    def add_crawler_detailed_rule(self, crawler_rule_id, field_name, xpath, extract_type='text', attribute_name=None, is_required=0):
-        self.log(f"开始添加详细爬虫规则: 主规则ID={crawler_rule_id}, 字段名={field_name}", 'INFO')
-        
-        try:
-            self.cursor.execute('''
-                INSERT INTO crawler_detailed_rules (crawler_rule_id, field_name, xpath, extract_type, attribute_name, is_required)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (crawler_rule_id, field_name, xpath, extract_type, attribute_name, is_required))
-            self.conn.commit()
-            
-            rule_id = self.cursor.lastrowid
-            self.log(f"详细爬虫规则添加成功: 规则ID={rule_id}, 字段名={field_name}", 'INFO')
-            
-            return rule_id
-        
-        except Exception as e:
-            self.log(f"详细爬虫规则添加失败: 字段名={field_name} - 错误: {str(e)}", 'ERROR')
-            return None
-    
-    def get_crawler_detailed_rules(self, crawler_rule_id):
-        self.log(f"开始查询详细爬虫规则: 主规则ID={crawler_rule_id}", 'DEBUG')
-        
-        try:
-            self.cursor.execute('SELECT * FROM crawler_detailed_rules WHERE crawler_rule_id = ?', (crawler_rule_id,))
-            rules = self.cursor.fetchall()
-            
-            self.log(f"详细爬虫规则查询完成: 主规则ID={crawler_rule_id}, 结果数量={len(rules)}", 'DEBUG')
-            
-            return rules
-        
-        except Exception as e:
-            self.log(f"详细爬虫规则查询失败: 主规则ID={crawler_rule_id} - 错误: {str(e)}", 'ERROR')
-            return []
-    
-    def update_crawler_detailed_rule(self, rule_id, field_name=None, xpath=None, extract_type=None, attribute_name=None, is_required=None):
-        self.log(f"开始更新详细爬虫规则: 规则ID={rule_id}", 'INFO')
-        
-        try:
-            # 先获取当前规则
-            current_rule = self.get_crawler_detailed_rule(rule_id)
-            if not current_rule:
-                return False
-            
-            # 使用当前值作为默认值
-            update_field_name = field_name if field_name is not None else current_rule[2]
-            update_xpath = xpath if xpath is not None else current_rule[3]
-            update_extract_type = extract_type if extract_type is not None else current_rule[4]
-            update_attribute_name = attribute_name if attribute_name is not None else current_rule[5]
-            update_is_required = is_required if is_required is not None else current_rule[6]
-            
-            self.cursor.execute('''
-                UPDATE crawler_detailed_rules SET
-                    field_name = ?, xpath = ?, extract_type = ?, attribute_name = ?, is_required = ?
-                WHERE id = ?
-            ''', (update_field_name, update_xpath, update_extract_type, update_attribute_name, update_is_required, rule_id))
-            self.conn.commit()
-            
-            self.log(f"详细爬虫规则更新成功: 规则ID={rule_id}", 'INFO')
-            
-            return True
-        
-        except Exception as e:
-            self.log(f"详细爬虫规则更新失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    def delete_crawler_detailed_rule(self, rule_id):
-        self.log(f"开始删除详细爬虫规则: 规则ID={rule_id}", 'INFO')
-        
-        try:
-            self.cursor.execute('DELETE FROM crawler_detailed_rules WHERE id = ?', (rule_id,))
-            self.conn.commit()
-            
-            if self.cursor.rowcount > 0:
-                self.log(f"详细爬虫规则删除成功: 规则ID={rule_id}", 'INFO')
-                return True
-            else:
-                self.log(f"详细爬虫规则删除失败: 规则ID={rule_id} 不存在", 'WARNING')
-                return False
-        
-        except Exception as e:
-            self.log(f"详细爬虫规则删除失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    def delete_crawler_detailed_rules_by_rule_id(self, crawler_rule_id):
-        self.log(f"开始删除详细爬虫规则: 主规则ID={crawler_rule_id}", 'INFO')
-        
-        try:
-            self.cursor.execute('DELETE FROM crawler_detailed_rules WHERE crawler_rule_id = ?', (crawler_rule_id,))
-            self.conn.commit()
-            
-            self.log(f"详细爬虫规则删除成功: 主规则ID={crawler_rule_id}, 删除数量={self.cursor.rowcount}", 'INFO')
-            return True
-        
-        except Exception as e:
-            self.log(f"详细爬虫规则删除失败: 主规则ID={crawler_rule_id} - 错误: {str(e)}", 'ERROR')
-            return False
-    
-    def get_crawler_detailed_rule(self, rule_id):
-        self.log(f"开始查询单个详细爬虫规则: 规则ID={rule_id}", 'DEBUG')
-        
-        try:
-            self.cursor.execute('SELECT * FROM crawler_detailed_rules WHERE id = ?', (rule_id,))
-            rule = self.cursor.fetchone()
-            
-            if rule:
-                self.log(f"详细爬虫规则查询成功: 规则ID={rule_id}", 'DEBUG')
-            else:
-                self.log(f"详细爬虫规则查询失败: 规则ID={rule_id} 不存在", 'DEBUG')
-            
-            return rule
-        
-        except Exception as e:
-            self.log(f"详细爬虫规则查询失败: 规则ID={rule_id} - 错误: {str(e)}", 'ERROR')
-            return None
+
     
     def close(self):
         try:
