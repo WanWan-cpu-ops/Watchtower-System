@@ -452,3 +452,150 @@
 2025-12-06 11:47:53,134 - INFO - 提取概要: ä½ å¥½ä¸­æ–‡...
 2025-12-06 11:47:53,134 - INFO - 成功提取并去重 6 条搜索结果
 2025-12-06 11:47:53,135 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_你好.json'
+2025-12-06 11:50:04,292 - INFO - connection closed
+2025-12-06 11:52:16,266 - INFO - 原始关键词: 四六级, 编码后: %E5%9B%9B%E5%85%AD%E7%BA%A7
+2025-12-06 11:52:16,267 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%9B%9B%E5%85%AD%E7%BA%A7&pn=0
+2025-12-06 11:52:19,935 - INFO - 请求成功，状态码: 200
+2025-12-06 11:52:19,936 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%9B%9B%E5%85%AD%E7%BA%A7&pn=0
+2025-12-06 11:52:19,940 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_四六级_1.json'
+2025-12-06 11:52:19,983 - INFO - 找到 6 个搜索结果项
+2025-12-06 11:52:19,985 - INFO - 提取概要: è‹±è¯­å››å…­çº§è€ƒè¯• - å…¨å›½å¤§å­¦è‹±è¯­å››ã€�å…...
+2025-12-06 11:52:19,986 - INFO - 提取概要: å››å…­çº§å‡†è€ƒè¯�æ‰“å�°å…¥å�£ - å…¨å›½å¤§å­¦è‹±è¯...
+2025-12-06 11:52:19,988 - INFO - 提取概要: ETEST é€šè¡Œè¯� - CETç™»å½•...
+2025-12-06 11:52:19,989 - INFO - 提取概要: å¤§å­¦å››å…­çº§æ˜¯ä»€ä¹ˆæ„�æ€�...
+2025-12-06 11:52:19,992 - INFO - 提取概要: å¤§å­¦è‹±è¯­å››å…­çº§-é™•è¥¿çœ�æ•™è‚²è€ƒè¯•é™¢...
+2025-12-06 11:52:19,994 - INFO - 提取概要: 2025å¹´å››å…­çº§è€ƒè¯•å®‰æ�’æ�¥äº†?å¿«æ�¥ä¸€èµ·çœ‹...
+2025-12-06 11:52:19,995 - INFO - 成功提取并去重 6 条搜索结果
+2025-12-06 11:52:19,995 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_四六级.json'
+2025-12-06 11:54:58,729 - INFO - connection closed
+2025-12-06 11:54:59,105 - INFO - connection open
+2025-12-06 11:55:04,620 - INFO - connection closed
+2025-12-06 11:55:04,941 - INFO - connection open
+2025-12-06 11:55:15,306 - INFO - connection closed
+2025-12-06 11:55:15,639 - INFO - connection open
+2025-12-06 11:56:09,091 - INFO - connection closed
+2025-12-06 11:58:33,026 - INFO - connection open
+2025-12-06 11:58:45,245 - INFO - connection closed
+2025-12-06 11:58:45,279 - INFO - connection open
+2025-12-06 12:03:56,521 - INFO - connection closed
+2025-12-06 13:18:09,049 - INFO - connection open
+2025-12-06 13:18:18,680 - INFO - connection closed
+2025-12-06 13:18:18,700 - INFO - connection open
+2025-12-06 13:18:40,761 - INFO - 原始关键词: 青年大学习, 编码后: %E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0
+2025-12-06 13:18:40,761 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0&pn=0
+2025-12-06 13:18:43,618 - INFO - 请求成功，状态码: 200
+2025-12-06 13:18:43,619 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0&pn=0
+2025-12-06 13:18:43,622 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_青年大学习_1.json'
+2025-12-06 13:18:43,668 - INFO - 找到 5 个搜索结果项
+2025-12-06 13:18:43,669 - INFO - 提取概要: é�’å¹´å¤§å­¦ä¹...
+2025-12-06 13:18:43,671 - INFO - 提取概要: é�’å¹´å¤§å­¦ä¹_ å¤§æ€�æ”¿è¯¾_ä¸­å›½é�’å¹´ç½‘...
+2025-12-06 13:18:43,672 - INFO - 提取概要: é�’å¹´Â·å­¦ä¹...
+2025-12-06 13:18:43,674 - INFO - 提取概要: é�’å¹´å¤§å­¦ä¹...
+2025-12-06 13:18:43,675 - INFO - 提取概要: é�’å¹´å¤§å­¦ä¹-å·¥å¤§é�’å¹´...
+2025-12-06 13:18:43,676 - INFO - 成功提取并去重 5 条搜索结果
+2025-12-06 13:18:43,676 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_青年大学习.json'
+2025-12-06 13:19:42,733 - INFO - connection closed
+2025-12-06 13:19:57,927 - INFO - connection open
+2025-12-06 13:21:50,480 - INFO - connection open
+2025-12-06 13:22:38,841 - INFO - connection closed
+2025-12-06 13:22:44,617 - INFO - connection open
+2025-12-06 13:25:45,270 - INFO - connection closed
+2025-12-06 13:25:45,813 - INFO - connection open
+2025-12-06 13:26:28,680 - INFO - connection closed
+2025-12-06 13:26:29,253 - INFO - connection open
+2025-12-06 13:29:55,980 - INFO - connection closed
+2025-12-06 13:29:55,981 - INFO - connection closed
+2025-12-06 13:29:56,772 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:29:56,773 - INFO - server listening on [::1]:8000
+2025-12-06 13:30:00,988 - INFO - connection open
+2025-12-06 13:30:09,026 - INFO - connection open
+2025-12-06 13:30:12,700 - INFO - connection closed
+2025-12-06 13:31:03,324 - INFO - connection closed
+2025-12-06 13:31:04,329 - INFO - server listening on [::1]:8000
+2025-12-06 13:31:04,329 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:31:08,330 - INFO - connection open
+2025-12-06 13:31:13,941 - INFO - connection open
+2025-12-06 13:31:18,624 - INFO - connection closed
+2025-12-06 13:32:04,807 - INFO - connection closed
+2025-12-06 13:32:07,073 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:32:07,073 - INFO - server listening on [::1]:8000
+2025-12-06 13:32:11,583 - INFO - connection open
+2025-12-06 13:32:17,430 - INFO - connection open
+2025-12-06 13:32:18,939 - INFO - connection closed
+2025-12-06 13:32:52,673 - INFO - connection closed
+2025-12-06 13:32:53,643 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:32:53,644 - INFO - server listening on [::1]:8000
+2025-12-06 13:32:57,682 - INFO - connection open
+2025-12-06 13:33:26,109 - INFO - connection open
+2025-12-06 13:33:30,835 - INFO - connection closed
+2025-12-06 13:34:03,588 - INFO - connection closed
+2025-12-06 13:34:04,565 - INFO - server listening on [::1]:8000
+2025-12-06 13:34:04,565 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:34:08,601 - INFO - connection open
+2025-12-06 13:34:39,971 - INFO - connection open
+2025-12-06 13:34:41,338 - INFO - connection closed
+2025-12-06 13:35:11,221 - INFO - connection closed
+2025-12-06 13:35:12,197 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:35:12,198 - INFO - server listening on [::1]:8000
+2025-12-06 13:35:16,227 - INFO - connection open
+2025-12-06 13:35:22,342 - INFO - connection open
+2025-12-06 13:35:23,774 - INFO - connection closed
+2025-12-06 13:35:55,198 - INFO - connection closed
+2025-12-06 13:35:56,154 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:35:56,155 - INFO - server listening on [::1]:8000
+2025-12-06 13:36:00,204 - INFO - connection open
+2025-12-06 13:36:05,902 - INFO - connection open
+2025-12-06 13:36:07,149 - INFO - connection closed
+2025-12-06 13:36:36,651 - INFO - connection closed
+2025-12-06 13:37:46,314 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:37:46,315 - INFO - server listening on [::1]:8000
+2025-12-06 13:38:09,345 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:38:09,346 - INFO - server listening on [::1]:8000
+2025-12-06 13:38:19,891 - INFO - connection open
+2025-12-06 13:38:23,296 - INFO - connection closed
+2025-12-06 13:39:19,911 - INFO - server listening on [::1]:8000
+2025-12-06 13:39:19,912 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:39:29,511 - INFO - connection open
+2025-12-06 13:39:30,978 - INFO - connection closed
+2025-12-06 13:43:20,928 - INFO - server listening on 127.0.0.1:8000
+2025-12-06 13:43:20,928 - INFO - server listening on [::1]:8000
+2025-12-06 14:16:12,088 - INFO - connection open
+2025-12-06 14:16:21,869 - INFO - connection closed
+2025-12-06 14:16:22,434 - INFO - connection open
+2025-12-06 14:16:51,595 - INFO - 原始关键词: 南充, 编码后: %E5%8D%97%E5%85%85
+2025-12-06 14:16:51,595 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%8D%97%E5%85%85&pn=0
+2025-12-06 14:16:55,251 - INFO - 请求成功，状态码: 200
+2025-12-06 14:16:55,251 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%8D%97%E5%85%85&pn=0
+2025-12-06 14:16:55,256 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_南充_1.json'
+2025-12-06 14:16:55,310 - INFO - 找到 2 个搜索结果项
+2025-12-06 14:16:55,312 - INFO - 提取概要: å�—å……å¸‚äººæ°‘æ”¿åºœ...
+2025-12-06 14:16:55,313 - INFO - 提取概要: ã€�å�—å……å¤©æ°”é¢„æŠ¥15å¤©_å�—å……å¤©æ°”é¢„æŠ¥15å¤©...
+2025-12-06 14:16:55,314 - INFO - 成功提取并去重 2 条搜索结果
+2025-12-06 14:16:55,314 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_南充.json'
+2025-12-06 14:19:19,575 - INFO - connection closed
+2025-12-06 14:19:20,201 - INFO - connection open
+2025-12-06 14:20:01,130 - INFO - connection closed
+2025-12-06 14:20:36,769 - INFO - connection open
+2025-12-06 14:21:41,524 - INFO - connection closed
+2025-12-06 14:21:42,101 - INFO - connection open
+2025-12-06 14:22:00,867 - INFO - 原始关键词: 原神, 编码后: %E5%8E%9F%E7%A5%9E
+2025-12-06 14:22:00,867 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%8E%9F%E7%A5%9E&pn=0
+2025-12-06 14:22:23,192 - ERROR - 请求失败: HTTPSConnectionPool(host='www.baidu.com', port=443): Read timed out.
+2025-12-06 14:22:23,192 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_原神_1.json'
+2025-12-06 14:22:26,189 - INFO - 原始关键词: 原神, 编码后: %E5%8E%9F%E7%A5%9E
+2025-12-06 14:22:26,190 - INFO - 准备访问URL: https://www.baidu.com/s?wd=%E5%8E%9F%E7%A5%9E&pn=0
+2025-12-06 14:22:32,400 - INFO - 请求成功，状态码: 200
+2025-12-06 14:22:32,400 - INFO - 实际访问的URL: https://www.baidu.com/s?wd=%E5%8E%9F%E7%A5%9E&pn=0
+2025-12-06 14:22:32,404 - ERROR - 保存响应信息失败: [Errno 2] No such file or directory: 'search_cache\\search_info_原神_1.json'
+2025-12-06 14:22:32,467 - INFO - 找到 3 个搜索结果项
+2025-12-06 14:22:32,469 - INFO - 提取概要: ã€Šå�Ÿç¥�ã€‹å®˜æ–¹ç½‘ç«™-å…¨æ–°ã€Œæœˆä¹‹ä¸‰ã€�æ–°ç...
+2025-12-06 14:22:32,471 - INFO - 提取概要: ã€Šç±³å“ˆäº‘æ¸¸ã€‹å®˜ç½‘-äº‘å�Ÿç¥�æ­£å¼�ä¸Šçº¿ - ç...
+2025-12-06 14:22:32,472 - INFO - 提取概要: äº‘Â·å�Ÿç¥�...
+2025-12-06 14:22:32,473 - INFO - 成功提取并去重 3 条搜索结果
+2025-12-06 14:22:32,473 - ERROR - 保存提取的搜索结果失败: [Errno 2] No such file or directory: 'proceeded_pages\\search_scan_原神.json'
+2025-12-06 14:22:49,370 - INFO - connection closed
+2025-12-06 14:22:49,371 - INFO - connection open
+2025-12-06 14:23:00,197 - INFO - connection closed
+2025-12-06 14:23:00,771 - INFO - connection open
+2025-12-06 14:23:08,600 - INFO - connection closed
+2025-12-06 14:23:08,934 - INFO - connection open

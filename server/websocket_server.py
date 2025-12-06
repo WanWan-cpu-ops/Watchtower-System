@@ -6,6 +6,7 @@ from datetime import datetime
 from .database import Database
 from .C2SPackageHelper import C2SPackageHelper
 from .search_source_manager import SearchSourceManager
+from .sniffer import WebSniffer
 
 class WebSocketServer:
     def __init__(self, host='localhost', port=8000):
@@ -16,6 +17,9 @@ class WebSocketServer:
         # 初始化数据库和搜索源管理器
         self.db = Database()
         self.search_source_manager = SearchSourceManager(self.db.get_blacklist())
+        
+        # 初始化网页内容嗅探器
+        self.sniffer = WebSniffer()
         
         # 保存最后一次搜索的结果
         self.last_search_results = []
@@ -84,6 +88,25 @@ class WebSocketServer:
             
             elif message_type == 'enable_search_source':
                 await self.handle_enable_search_source(websocket, message_data)
+            
+            elif message_type == 'sniff_webpage':
+                await self.handle_sniff_webpage(websocket, message_data)
+            
+            elif message_type == 'save_crawler_rule':
+                await self.handle_save_crawler_rule(websocket, message_data)
+            
+            elif message_type == 'refresh_crawler_rules':
+                self.log(f"收到刷新爬虫规则请求 from {websocket.remote_address}", 'INFO')
+                await self.handle_refresh_crawler_rules(websocket)
+            elif message_type == 'enable_crawler_rule':
+                self.log(f"收到启用爬虫规则请求 from {websocket.remote_address}", 'INFO')
+                await self.handle_enable_crawler_rule(websocket, message_data)
+            elif message_type == 'disable_crawler_rule':
+                self.log(f"收到禁用爬虫规则请求 from {websocket.remote_address}", 'INFO')
+                await self.handle_disable_crawler_rule(websocket, message_data)
+            elif message_type == 'delete_crawler_rule':
+                self.log(f"收到删除爬虫规则请求 from {websocket.remote_address}", 'INFO')
+                await self.handle_delete_crawler_rule(websocket, message_data)
             
             else:
                 self.log(f"未知消息类型: {message_type} from {websocket.remote_address}", 'WARNING')
@@ -380,6 +403,212 @@ class WebSocketServer:
             })
         
         await websocket.send(C2SPackageHelper.search_source_status_updated(formatted_sources))
+    
+    # 处理网页内容嗅探
+    async def handle_sniff_webpage(self, websocket, data):
+        url = data.get('url')
+        source_id = data.get('source_id')
+        source_name = data.get('source_name')
+        headers = data.get('headers', {})
+        
+        self.log(f"开始处理网页内容嗅探请求: URL={url}, 源ID={source_id}, 源名称={source_name} from {websocket.remote_address}", 'INFO')
+        
+        if not url:
+            self.log(f"嗅探请求失败: URL为空 from {websocket.remote_address}", 'WARNING')
+            await websocket.send(C2SPackageHelper.error("URL不能为空"))
+            return
+        
+        if not source_id:
+            self.log(f"嗅探请求失败: 源ID为空 from {websocket.remote_address}", 'WARNING')
+            await websocket.send(C2SPackageHelper.error("源ID不能为空"))
+            return
+        
+        if not source_name:
+            self.log(f"嗅探请求失败: 源名称为空 from {websocket.remote_address}", 'WARNING')
+            await websocket.send(C2SPackageHelper.error("源名称不能为空"))
+            return
+        
+        # 发送正在嗅探信号
+        sniffing_response = C2SPackageHelper.sniffing()
+        await websocket.send(sniffing_response)
+        self.log(f"发送正在嗅探响应: {sniffing_response}", 'DEBUG')
+        
+        # 执行嗅探
+        result = self.sniffer.sniff(url, source_id, source_name, headers)
+        
+        if result:
+            self.log(f"嗅探成功: URL={url}, 源ID={source_id} from {websocket.remote_address}", 'INFO')
+            sniffed_response = C2SPackageHelper.sniffing_completed(result)
+            await websocket.send(sniffed_response)
+            self.log(f"发送嗅探完成响应: {sniffed_response}", 'DEBUG')
+        else:
+            self.log(f"嗅探失败: URL={url}, 源ID={source_id} from {websocket.remote_address}", 'ERROR')
+            error_response = C2SPackageHelper.error("网页内容嗅探失败")
+            await websocket.send(error_response)
+            self.log(f"发送嗅探失败响应: {error_response}", 'DEBUG')
+    
+    # 处理保存爬虫规则请求
+    async def handle_save_crawler_rule(self, websocket, data):
+        self.log(f"开始处理保存爬虫规则请求: 数据={data} from {websocket.remote_address}", 'INFO')
+        
+        # 验证必填字段
+        required_fields = ['source_id', 'source_name', 'title_xpath', 'content_xpath', 'request_headers']
+        for field in required_fields:
+            if field not in data:
+                self.log(f"保存爬虫规则失败: 缺少字段 {field} from {websocket.remote_address}", 'WARNING')
+                await websocket.send(C2SPackageHelper.error(f"缺少字段: {field}"))
+                return
+        
+        # 发送正在保存信号
+        saving_response = C2SPackageHelper.saving_crawler_rule()
+        await websocket.send(saving_response)
+        self.log(f"发送正在保存响应: {saving_response}", 'DEBUG')
+        
+        try:
+            # 保存爬虫规则到数据库
+            self.log(f"准备保存爬虫规则: 数据={data} from {websocket.remote_address}", 'DEBUG')
+            
+            # 将request_headers从dict转换为字符串
+            import json
+            request_headers_str = json.dumps(data['request_headers'])
+            
+            rule_id = self.db.add_crawler_rule(
+                source_id=data['source_id'],
+                source_name=data['source_name'],
+                title_xpath=data['title_xpath'],
+                content_xpath=data['content_xpath'],
+                image_xpath=data.get('image_xpath', ''),
+                url_xpath=data.get('url_xpath', ''),
+                request_headers=request_headers_str,
+                status=data.get('status', 1),
+                remarks=data.get('remarks', '')
+            )
+            
+            if rule_id is not None:
+                self.log(f"爬虫规则保存成功: 规则ID={rule_id} from {websocket.remote_address}", 'INFO')
+                saved_response = C2SPackageHelper.crawler_rule_saved(rule_id)
+                await websocket.send(saved_response)
+                self.log(f"发送保存完成响应: {saved_response}", 'DEBUG')
+            else:
+                self.log(f"爬虫规则保存失败: add_crawler_rule返回None from {websocket.remote_address}", 'ERROR')
+                error_response = C2SPackageHelper.error("保存爬虫规则失败: 数据库操作失败")
+                await websocket.send(error_response)
+                self.log(f"发送保存失败响应: {error_response}", 'DEBUG')
+                
+        except Exception as e:
+            self.log(f"保存爬虫规则失败: 错误={str(e)} from {websocket.remote_address}", 'ERROR')
+            import traceback
+            self.log(f"错误堆栈: {traceback.format_exc()}", 'ERROR')
+            error_response = C2SPackageHelper.error(f"保存爬虫规则失败: {str(e)}")
+            await websocket.send(error_response)
+            self.log(f"发送保存失败响应: {error_response}", 'DEBUG')
+    
+    # 处理刷新爬虫规则请求
+    async def handle_refresh_crawler_rules(self, websocket):
+        self.log(f"开始处理刷新爬虫规则请求 from {websocket.remote_address}", 'INFO')
+        
+        # 发送正在读取信号
+        reading_response = C2SPackageHelper.reading_crawler_rules()
+        await websocket.send(reading_response)
+        self.log(f"发送正在读取响应: {reading_response}", 'DEBUG')
+        
+        # 读取数据库中的爬虫规则
+        rules = self.db.get_crawler_rules()
+        
+        # 转换数据格式
+        formatted_rules = []
+        for rule in rules:
+            formatted_rules.append({
+                'id': rule[0],
+                'source_id': rule[1],
+                'source_name': rule[2],
+                'title_xpath': rule[3],
+                'content_xpath': rule[4],
+                'image_xpath': rule[5],
+                'url_xpath': rule[6],
+                'request_headers': rule[7],
+                'status': rule[8],
+                'remarks': rule[9],
+                'created_at': rule[10],
+                'updated_at': rule[11],
+                'is_enabled': rule[12] == 1
+            })
+        
+        self.log(f"读取到 {len(formatted_rules)} 条爬虫规则 from {websocket.remote_address}", 'INFO')
+        
+        # 发送读取完成信号和数据
+        completed_response = C2SPackageHelper.crawler_rules_read_completed(formatted_rules)
+        await websocket.send(completed_response)
+        self.log(f"发送读取完成响应: {completed_response}", 'DEBUG')
+    
+    # 处理启用爬虫规则请求
+    async def handle_enable_crawler_rule(self, websocket, data):
+        self.log(f"开始处理启用爬虫规则请求: 数据={data} from {websocket.remote_address}", 'INFO')
+        
+        # 验证必填字段
+        if 'id' not in data:
+            self.log(f"启用爬虫规则失败: 缺少字段 id from {websocket.remote_address}", 'WARNING')
+            await websocket.send(C2SPackageHelper.error("缺少字段: id"))
+            return
+        
+        try:
+            # 启用爬虫规则
+            result = self.db.enable_crawler_rule(data['id'])
+            if result:
+                self.log(f"爬虫规则启用成功: 规则ID={data['id']} from {websocket.remote_address}", 'INFO')
+                await self.handle_refresh_crawler_rules(websocket)  # 刷新规则列表
+            else:
+                self.log(f"爬虫规则启用失败: 规则ID={data['id']} from {websocket.remote_address}", 'ERROR')
+                await websocket.send(C2SPackageHelper.error("启用爬虫规则失败"))
+        except Exception as e:
+            self.log(f"启用爬虫规则失败: 错误={str(e)} from {websocket.remote_address}", 'ERROR')
+            await websocket.send(C2SPackageHelper.error(f"启用爬虫规则失败: {str(e)}"))
+    
+    # 处理禁用爬虫规则请求
+    async def handle_disable_crawler_rule(self, websocket, data):
+        self.log(f"开始处理禁用爬虫规则请求: 数据={data} from {websocket.remote_address}", 'INFO')
+        
+        # 验证必填字段
+        if 'id' not in data:
+            self.log(f"禁用爬虫规则失败: 缺少字段 id from {websocket.remote_address}", 'WARNING')
+            await websocket.send(C2SPackageHelper.error("缺少字段: id"))
+            return
+        
+        try:
+            # 禁用爬虫规则
+            result = self.db.disable_crawler_rule(data['id'])
+            if result:
+                self.log(f"爬虫规则禁用成功: 规则ID={data['id']} from {websocket.remote_address}", 'INFO')
+                await self.handle_refresh_crawler_rules(websocket)  # 刷新规则列表
+            else:
+                self.log(f"爬虫规则禁用失败: 规则ID={data['id']} from {websocket.remote_address}", 'ERROR')
+                await websocket.send(C2SPackageHelper.error("禁用爬虫规则失败"))
+        except Exception as e:
+            self.log(f"禁用爬虫规则失败: 错误={str(e)} from {websocket.remote_address}", 'ERROR')
+            await websocket.send(C2SPackageHelper.error(f"禁用爬虫规则失败: {str(e)}"))
+    
+    # 处理删除爬虫规则请求
+    async def handle_delete_crawler_rule(self, websocket, data):
+        self.log(f"开始处理删除爬虫规则请求: 数据={data} from {websocket.remote_address}", 'INFO')
+        
+        # 验证必填字段
+        if 'id' not in data:
+            self.log(f"删除爬虫规则失败: 缺少字段 id from {websocket.remote_address}", 'WARNING')
+            await websocket.send(C2SPackageHelper.error("缺少字段: id"))
+            return
+        
+        try:
+            # 删除爬虫规则
+            result = self.db.delete_crawler_rule(data['id'])
+            if result:
+                self.log(f"爬虫规则删除成功: 规则ID={data['id']} from {websocket.remote_address}", 'INFO')
+                await self.handle_refresh_crawler_rules(websocket)  # 刷新规则列表
+            else:
+                self.log(f"爬虫规则删除失败: 规则ID={data['id']} from {websocket.remote_address}", 'ERROR')
+                await websocket.send(C2SPackageHelper.error("删除爬虫规则失败"))
+        except Exception as e:
+            self.log(f"删除爬虫规则失败: 错误={str(e)} from {websocket.remote_address}", 'ERROR')
+            await websocket.send(C2SPackageHelper.error(f"删除爬虫规则失败: {str(e)}"))
     
     async def start_server(self):
         """

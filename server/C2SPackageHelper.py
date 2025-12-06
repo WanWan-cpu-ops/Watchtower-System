@@ -103,3 +103,35 @@ class C2SPackageHelper:
         return C2SPackageHelper.create_package('error', {
             'message': message
         })
+    
+    # 嗅探功能相关数据包
+    @staticmethod
+    def sniffing():
+        return C2SPackageHelper.create_package('sniffing')
+    
+    @staticmethod
+    def sniffing_completed(result):
+        return C2SPackageHelper.create_package('sniffing_completed', {
+            'result': result
+        })
+    
+    # 爬虫规则相关数据包
+    @staticmethod
+    def saving_crawler_rule():
+        return C2SPackageHelper.create_package('saving_crawler_rule')
+    
+    @staticmethod
+    def crawler_rule_saved(rule_id):
+        return C2SPackageHelper.create_package('crawler_rule_saved', {
+            'rule_id': rule_id
+        })
+    
+    @staticmethod
+    def reading_crawler_rules():
+        return C2SPackageHelper.create_package('reading_crawler_rules')
+    
+    @staticmethod
+    def crawler_rules_read_completed(rules):
+        return C2SPackageHelper.create_package('crawler_rules_read_completed', {
+            'rules': rules
+        })

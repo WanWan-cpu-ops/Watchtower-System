@@ -8,7 +8,10 @@ const AppState = {
     itemsPerPage: 18, // 6行 × 3列
     selectedItems: new Set(),
     dataRecords: [],
-    searchSources: []
+    searchSources: [],
+    crawlerRules: [],
+    sniffingInProgress: false,
+    sniffingResult: null
 };
 
 // 页面加载完成后执行
@@ -49,6 +52,9 @@ function initializeApp() {
         
         // 刷新搜索源管理页面
         refreshSearchSourceManagementPage();
+        
+        // 刷新爬虫规则管理页面
+        refreshCrawlerRuleManagementPage();
     });
 }
 
@@ -74,6 +80,52 @@ function registerWebSocketCallbacks() {
     WebSocketClient.on('error', function(data) {
         console.error('客户端处理WebSocket错误响应:', data);
         showStatusMessage(data.message, 'error');
+    });
+    
+    // 处理网页嗅探响应
+    WebSocketClient.on('sniffing', function(data) {
+        if (data.status === 'sniffing') {
+            showStatusMessage('正在嗅探网页内容...', 'info');
+            AppState.sniffingInProgress = true;
+            document.getElementById('start-sniff-button').disabled = true;
+        } else if (data.status === 'completed') {
+            showStatusMessage('网页嗅探完成', 'success');
+            AppState.sniffingInProgress = false;
+            AppState.sniffingResult = data.result;
+            document.getElementById('start-sniff-button').disabled = false;
+            displaySniffingResult();
+        } else if (data.status === 'failed') {
+            showStatusMessage('网页嗅探失败：' + data.message, 'error');
+            AppState.sniffingInProgress = false;
+            document.getElementById('start-sniff-button').disabled = false;
+        }
+    });
+    
+    // 处理保存爬虫规则响应
+    WebSocketClient.on('crawler_rule_saved', function(data) {
+        if (data.success) {
+            showStatusMessage('爬虫规则保存成功', 'success');
+            // 清空嗅探结果
+            AppState.sniffingResult = null;
+            document.getElementById('sniff-url-input').value = '';
+            document.getElementById('source-id-input').value = '';
+            document.getElementById('source-name-input').value = '';
+            document.getElementById('sniffing-result').innerHTML = '';
+            // 刷新规则列表
+            refreshCrawlerRuleManagementPage();
+        } else {
+            showStatusMessage('爬虫规则保存失败：' + data.message, 'error');
+        }
+    });
+    
+    // 处理爬虫规则读取响应
+    WebSocketClient.on('crawler_rules_read_completed', function(data) {
+        if (data.success) {
+            AppState.crawlerRules = data.rules;
+            displayCrawlerRules();
+        } else {
+            showStatusMessage('读取爬虫规则失败：' + data.message, 'error');
+        }
     });
     
     // 数据搜索响应回调
@@ -214,6 +266,9 @@ function initializePageElements() {
     
     // 初始化个人资料页面元素
     initializeProfilePage();
+    
+    // 初始化爬虫规则管理页面元素
+    initializeCrawlerRuleManagementPage();
     
     // 初始化模态框
     initializeModal();
@@ -474,6 +529,204 @@ function initializeProfilePage() {
             window.location.href = 'login.html';
         }
     });
+}
+
+// 初始化爬虫规则管理页面
+function initializeCrawlerRuleManagementPage() {
+    // 获取页面元素
+    const startSniffButton = document.getElementById('start-sniff-button');
+    const saveRuleButton = document.getElementById('save-rule-button');
+    const refreshRulesButton = document.getElementById('refresh-rules-button');
+    
+    // 添加事件监听
+    if (startSniffButton) {
+        startSniffButton.addEventListener('click', handleStartSniffing);
+    }
+    
+    if (saveRuleButton) {
+        saveRuleButton.addEventListener('click', handleSaveRule);
+    }
+    
+    if (refreshRulesButton) {
+        refreshRulesButton.addEventListener('click', refreshCrawlerRuleManagementPage);
+    }
+}
+
+// 处理开始嗅探按钮点击
+function handleStartSniffing() {
+    const urlInput = document.getElementById('sniff-url-input');
+    const sourceIdInput = document.getElementById('source-id-input');
+    const sourceNameInput = document.getElementById('source-name-input');
+    
+    const url = urlInput.value.trim();
+    const sourceId = sourceIdInput.value.trim();
+    const sourceName = sourceNameInput.value.trim();
+    
+    if (!url) {
+        showStatusMessage('请输入要嗅探的网页URL', 'warning');
+        return;
+    }
+    
+    if (!sourceId) {
+        showStatusMessage('请输入源ID', 'warning');
+        return;
+    }
+    
+    if (!sourceName) {
+        showStatusMessage('请输入源名称', 'warning');
+        return;
+    }
+    
+    // 发送嗅探请求
+    WebSocketClient.sendSniffRequest(url, sourceId, sourceName);
+}
+
+// 处理保存规则按钮点击
+function handleSaveRule() {
+    if (!AppState.sniffingResult) {
+        showStatusMessage('请先完成网页嗅探', 'warning');
+        return;
+    }
+    
+    const urlInput = document.getElementById('sniff-url-input');
+    const sourceIdInput = document.getElementById('source-id-input');
+    const sourceNameInput = document.getElementById('source-name-input');
+    
+    const url = urlInput.value.trim();
+    const sourceId = sourceIdInput.value.trim();
+    const sourceName = sourceNameInput.value.trim();
+    
+    // 发送保存规则请求
+    WebSocketClient.sendSaveCrawlerRuleRequest({
+        source_id: sourceId,
+        source_name: sourceName,
+        url: url,
+        title_xpath: AppState.sniffingResult.title_xpath,
+        content_xpath: AppState.sniffingResult.content_xpath,
+        image_xpath: AppState.sniffingResult.image_xpath,
+        url_xpath: AppState.sniffingResult.url_xpath,
+        request_headers: AppState.sniffingResult.request_headers
+    });
+}
+
+// 刷新爬虫规则管理页面
+function refreshCrawlerRuleManagementPage() {
+    WebSocketClient.sendRefreshCrawlerRulesRequest();
+}
+
+// 显示嗅探结果
+function displaySniffingResult() {
+    const resultElement = document.getElementById('sniffing-result');
+    if (!resultElement || !AppState.sniffingResult) {
+        return;
+    }
+    
+    const result = AppState.sniffingResult;
+    let html = `
+        <h3>嗅探结果</h3>
+        <div class="sniffing-result-section">
+            <h4>标题 XPath:</h4>
+            <code>${result.title_xpath || '未找到'}</code>
+        </div>
+        <div class="sniffing-result-section">
+            <h4>内容 XPath:</h4>
+            <code>${result.content_xpath || '未找到'}</code>
+        </div>
+        <div class="sniffing-result-section">
+            <h4>图片 XPath:</h4>
+            <code>${result.image_xpath || '未找到'}</code>
+        </div>
+        <div class="sniffing-result-section">
+            <h4>链接 XPath:</h4>
+            <code>${result.url_xpath || '未找到'}</code>
+        </div>
+        <div class="sniffing-result-section">
+            <h4>请求头:</h4>
+            <pre>${JSON.stringify(result.request_headers, null, 2)}</pre>
+        </div>
+    `;
+    
+    resultElement.innerHTML = html;
+    
+    // 显示保存规则按钮
+    document.getElementById('save-rule-button').style.display = 'block';
+}
+
+// 显示爬虫规则列表
+function displayCrawlerRules() {
+    const rulesListElement = document.getElementById('crawler-rules-list');
+    if (!rulesListElement) {
+        return;
+    }
+    
+    if (AppState.crawlerRules.length === 0) {
+        rulesListElement.innerHTML = '<p>暂无爬虫规则</p>';
+        return;
+    }
+    
+    let html = `
+        <table class="rules-table">
+            <thead>
+                <tr>
+                    <th>源ID</th>
+                    <th>源名称</th>
+                    <th>标题XPath</th>
+                    <th>内容XPath</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    AppState.crawlerRules.forEach(rule => {
+        const statusClass = rule.is_enabled ? 'status-active' : 'status-inactive';
+        const statusText = rule.is_enabled ? '启用' : '禁用';
+        
+        html += `
+            <tr>
+                <td>${rule.source_id}</td>
+                <td>${rule.source_name}</td>
+                <td><code>${rule.title_xpath || '无'}</code></td>
+                <td><code>${rule.content_xpath || '无'}</code></td>
+                <td><span class="status-indicator ${statusClass}">${statusText}</span></td>
+                <td>
+                    <button class="btn btn-small ${statusClass}" onclick="toggleCrawlerRule('${rule.id}')">
+                        ${statusText === '启用' ? '禁用' : '启用'}
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="deleteCrawlerRule('${rule.id}')">
+                        删除
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    rulesListElement.innerHTML = html;
+}
+
+// 切换爬虫规则状态
+function toggleCrawlerRule(ruleId) {
+    const rule = AppState.crawlerRules.find(r => r.id === ruleId);
+    if (rule) {
+        if (rule.is_enabled) {
+            WebSocketClient.sendDisableCrawlerRuleRequest(ruleId);
+        } else {
+            WebSocketClient.sendEnableCrawlerRuleRequest(ruleId);
+        }
+    }
+}
+
+// 删除爬虫规则
+function deleteCrawlerRule(ruleId) {
+    if (confirm('确定要删除此爬虫规则吗？')) {
+        WebSocketClient.sendDeleteCrawlerRuleRequest(ruleId);
+    }
 }
 
 // 初始化模态框
@@ -985,6 +1238,8 @@ function showStatusMessage(message, type = 'info') {
         statusElement = document.getElementById('data-management-status');
     } else if (activePage.id === 'search-source-management') {
         statusElement = document.getElementById('search-source-status');
+    } else if (activePage.id === 'crawler-rule-management') {
+        statusElement = document.getElementById('crawler-rule-status');
     }
     
     if (!statusElement) return;

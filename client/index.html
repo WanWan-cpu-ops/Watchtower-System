@@ -17,6 +17,7 @@
             <a href="#data-collection" class="navbar-item active">数据采集</a>
             <a href="#data-management" class="navbar-item">数据管理</a>
             <a href="#search-source-management" class="navbar-item">搜索源管理</a>
+            <a href="#crawler-rule-management" class="navbar-item">爬虫规则管理</a>
             <a href="#profile" class="navbar-item">个人资料</a>
         </div>
     </nav>
@@ -115,6 +116,67 @@
             </div>
             
             <button id="logout" class="btn btn-danger">退出登录</button>
+        </section>
+        
+        <!-- 爬虫规则管理页面 -->
+        <section id="crawler-rule-management" class="page">
+            <div class="page-header">
+                <h2>爬虫规则管理</h2>
+            </div>
+            
+            <!-- 网页嗅探功能 -->
+            <div class="sniffer-section">
+                <h3>网页内容嗅探</h3>
+                
+                <div class="sniffer-controls">
+                    <input type="text" id="sniff-url" placeholder="请输入要嗅探的URL">
+                    <input type="text" id="sniff-source-id" placeholder="源ID">
+                    <input type="text" id="sniff-source-name" placeholder="源名称">
+                    <button id="start-sniff" class="btn btn-primary">开始嗅探</button>
+                </div>
+                
+                <div id="sniff-status" class="status-message"></div>
+                
+                <div class="sniff-results">
+                    <h4>嗅探结果</h4>
+                    <div class="result-item">
+                        <label>标题XPath:</label>
+                        <input type="text" id="title-xpath" readonly>
+                    </div>
+                    <div class="result-item">
+                        <label>内容XPath:</label>
+                        <input type="text" id="content-xpath" readonly>
+                    </div>
+                    <div class="result-item">
+                        <label>图片XPath:</label>
+                        <input type="text" id="image-xpath" readonly>
+                    </div>
+                    <div class="result-item">
+                        <label>URL XPath:</label>
+                        <input type="text" id="url-xpath" placeholder="请输入URL XPath">
+                    </div>
+                    <div class="result-item">
+                        <label>请求头:</label>
+                        <textarea id="request-headers" readonly rows="10"></textarea>
+                    </div>
+                    <div class="result-item">
+                        <label>备注:</label>
+                        <textarea id="rule-remarks" placeholder="请输入备注信息" rows="3"></textarea>
+                    </div>
+                    <button id="save-rule" class="btn btn-primary">保存规则</button>
+                </div>
+            </div>
+            
+            <!-- 爬虫规则管理 -->
+            <div class="rules-section">
+                <h3>爬虫规则列表</h3>
+                <button id="refresh-rules" class="btn btn-primary">刷新规则</button>
+                <div id="rules-status" class="status-message"></div>
+                
+                <div id="rules-list" class="rules-list">
+                    <!-- 规则列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
         </section>
     </main>
     

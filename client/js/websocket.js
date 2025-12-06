@@ -132,6 +132,70 @@ const WebSocketClient = {
     // 移除回调函数
     off: function(event) {
         delete this.callbacks[event];
+    },
+    
+    // 发送网页嗅探请求
+    sendSniffRequest: function(url, sourceId, sourceName) {
+        const message = {
+            type: 'sniff_webpage',
+            data: {
+                url: url,
+                source_id: sourceId,
+                source_name: sourceName
+            }
+        };
+        this.send(message);
+    },
+    
+    // 发送保存爬虫规则请求
+    sendSaveCrawlerRuleRequest: function(ruleData) {
+        const message = {
+            type: 'save_crawler_rule',
+            data: ruleData
+        };
+        this.send(message);
+    },
+    
+    // 发送刷新爬虫规则请求
+    sendRefreshCrawlerRulesRequest: function() {
+        const message = {
+            type: 'refresh_crawler_rules',
+            data: {}
+        };
+        this.send(message);
+    },
+    
+    // 发送启用爬虫规则请求
+    sendEnableCrawlerRuleRequest: function(ruleId) {
+        const message = {
+            type: 'enable_crawler_rule',
+            data: {
+                id: ruleId
+            }
+        };
+        this.send(message);
+    },
+    
+    // 发送禁用爬虫规则请求
+    sendDisableCrawlerRuleRequest: function(ruleId) {
+        const message = {
+            type: 'disable_crawler_rule',
+            data: {
+                id: ruleId
+            }
+        };
+        this.send(message);
+    },
+    
+    // 发送删除爬虫规则请求
+    sendDeleteCrawlerRuleRequest: function(ruleId) {
+        const message = {
+            type: 'delete_crawler_rule',
+            data: {
+                id: ruleId
+            }
+        };
+        this.send(message);
     }
 };
 
